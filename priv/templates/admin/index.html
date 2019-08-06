@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+{% block title %}( :{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Admin</h1>
+
+        <div class="col-4">
+            <form action="event.php" method="POST">
+                <div class="form-group">
+                    <label for="name">Eventnamn</label>
+                    <input class="form-control" type="text" name="name" id="name" placeholder="Ange eventnamn" required autocomplete="off">
+                </div>
+                <div>
+                    <label for="start_date">Starttid</label>
+                    <input class="form-control" type="datetime-local" name="start_date" id="start_date" required>
+                </div>
+                <div>
+                    <label for="end_time">Sluttid</label>
+                    <input class="form-control" type="datetime-local" name="end_time" id="end_time" required>
+                </div>
+                <div class="pt-3">                
+                    <input class="btn btn-dark" type="submit" name="action" value="Skapa">
+                </div>
+            </form>
+        </div>
+
+        <h3>Events</h3>
+        {% if not events %}
+            <p>
+                Det finns inga registrerade event.
+            </p>
+        {% else %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Namn</th>
+                        <th>Start</th>
+                        <th>Slut</th>
+                        <th>Skapad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td><a href="event.php?id={{ event.id }}">{{ event.id }}</a></td>
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.start_date }}</td>
+                            <td>{{ event.end_date }}</td>
+                            <td>{{ event.created_date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{
+    "name": "18mosu/q-rkill",
+    "description": "A game called 'Killer Game'.",
+    "type": "project",
+    "require": {
+        "twig/twig": "^2.11"
+    },
+    "authors": [
+        {
+            "name": "Movitz Sunar",
+            "email": "movitz.sunar@gmail.com"
+        }
+    ]
+}
