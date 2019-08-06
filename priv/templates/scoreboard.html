@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>QRKill - {{ event.name }}</h1>
+    <h3>countdown {{ event.end_date }}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Namn</th>
+                <th>Klass</th>
+                <th>Poäng</th>
+                <th>I livet</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.class }}</td>
+                <td>{{ user.score }}</td>
+                <td>{{ user.alive == '1' ? 'Ja' : 'Nej' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

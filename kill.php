@@ -12,14 +12,30 @@ if(!isset($_SESSION['qr']['id']))
     die();
 }
 
-$sql = 'SELECT (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) as x FROM qr_events RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id WHERE qr_players.qr_users_id = ? AND CURRENT_DATE < end_date AND CURRENT_DATE > start_date';
-$killed =  DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']])->fetchColumn();
+$sql = 'SELECT qr_players.alive, (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) as killed FROM qr_events RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id WHERE qr_players.qr_users_id = ? AND CURRENT_DATE < end_date AND CURRENT_DATE > start_date';
+$info =  DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']])->fetch();
 
-if($killed === '1')
+if($info['alive'] === '0')
 {
-    echo json_encode(['message' => 'Du dödade din fiende! Ger dig en ny.']);
+    echo json_encode(['error' => 'Denna person är redan död. Ta det lungt.']);
+    die();
+}
+
+if($info['killed'] === '1')
+{
+
+    $sql = 'UPDATE qr_players SET alive = 0 WHERE secret = ?';
+    DB::prepare($sql)->execute([$secret]);
+
+    $sql = 'INSERT INTO qr_kills (target, killer) VALUES ((SELECT qr_users_id FROM qr_players WHERE secret = ?), ?)';
+    DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']]);
+
+    $sql = 'UPDATE qr_players as q1 JOIN (SELECT target FROM qr_players WHERE secret = ?) as q2 SET q1.target = q2.target WHERE qr_users_id = ?';
+    DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']]);
+
+    echo json_encode(['code' => 3]); # SUCCESS
 }
 else
 {
-    echo json_encode(['message' => 'Koden du angav var inte korrekt']);
+    echo json_encode(['error' => 'Koden du angav var inte korrekt']);
 }

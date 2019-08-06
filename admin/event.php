@@ -51,6 +51,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
         $sql = 'DELETE FROM qr_events WHERE id = ?';
         DB::prepare($sql)->execute([$_POST['id']]);
+        
         header('Location: index.php');
         die();
     }
@@ -80,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
         foreach($users as $key => $user)
         {
-            $secret = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVW'), 10);
+            $secret = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVW'), 5);
             $sql = 'INSERT INTO qr_players (qr_events_id, qr_users_id, secret) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE secret = CONCAT(secret, \'X\')';
             DB::prepare($sql)->execute([$_POST['id'], $user['id'], $secret]);
         }

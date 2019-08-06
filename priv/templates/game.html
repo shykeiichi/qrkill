@@ -11,10 +11,25 @@
 <body>
     <h1>QRKill</h1>
     <a href="logout.php">Logga ut</a>
-
-    <span id="secret" hidden>{{ event.secret }}</span>
+    <noscript>
+        QRKill behöver JavaScript för att fungera, vänligen aktivera det och ladda om sidan.
+    </noscript>
+    <div>
+        Ditt mål heter <span id="targetName">{{ target.name }}</span> och går i <span id="targetClass">{{ target.class }}</span>
+    </div>
     <div id="qrcode"></div>
-    <video id="preview"></video>
-    <script src="scripts/main.js"></script>
+    <p>
+        Din kod är <span id="secret">{{ event.secret }}</span>. Ange den om din mördare inte kan skanna QR-koder.
+    </p>    
+    
+    <video id="preview" hidden></video>
+    <div id="manual" hidden>
+        <p>
+            Det verkar som om du inte kan använda kameran för att skanna QR-koder. Vänligen ange koden manuellt istället.
+        </p>
+        <input type="text" id="code" placeholder="Ange kod" required>
+        <button onclick="submitCode()">Mörda</button>
+    </div>
+    <script src="static/main.js"></script>
 </body>
 </html>
