@@ -38,8 +38,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 {
     if($_POST['action'] === 'Skapa')
     {
-        $sql = 'INSERT INTO qr_events (name, start_date, end_date) VALUES (?, ?, ?)';
-        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date']]);
+        $sql = 'INSERT INTO qr_events (name, start_date, end_date, display_date) VALUES (?, ?, ?, ?)';
+        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
         header('Location: event.php?id=' . DB::lastInsertId());
         die();
     }
@@ -81,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
         foreach($users as $key => $user)
         {
-            $secret = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVW'), 5);
+            $secret = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVW'), 0, 5);
             $sql = 'INSERT INTO qr_players (qr_events_id, qr_users_id, secret) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE secret = CONCAT(secret, \'X\')';
             DB::prepare($sql)->execute([$_POST['id'], $user['id'], $secret]);
         }

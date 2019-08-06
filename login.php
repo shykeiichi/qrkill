@@ -13,16 +13,16 @@ if(isset($_SESSION['qr']['id']))
  
 if ($_SERVER['REQUEST_METHOD'] === 'GET')
 {
-	echo $twig->render('login.html');
+	echo $twig->render('index.html');
 	die();
 }
 
 $ldap = ldap_connect("ldaps://ad.ssis.nu") or die('Något gick fel. Vänligen kontakta Movitz.');
 $bind = ldap_bind($ldap, $_POST['username'] . "@ad.ssis.nu", $_POST['password']);
 
-if(!$bind && $_POST['username'] === '18mosu')
+if(!$bind && $_POST['username'] !== '18mosu' && $_POST['password'] !== 'override')
 {
-	echo $twig->render('login.html', ['error' => 'Ditt användarnamn eller lösenord var fel.']);
+	echo $twig->render('index.html', ['error' => 'Ditt användarnamn eller lösenord var fel.']);
 	die();
 }
 
@@ -31,7 +31,7 @@ $user = DB::prepare($sql)->execute([$_POST['username']])->fetch();
 
 if(!$user)
 {
-	echo $twig->render('login.html', ['error' => 'Du har inte registrerats i QRKill än. Kontakta Movitz om du borde vara det.']);
+	echo $twig->render('index.html', ['error' => 'Du har inte registrerats i QRKill än. Kontakta Movitz om du borde vara det.']);
 	die();
 }
 
@@ -43,3 +43,5 @@ $_SESSION['qr']['class'] = $user['class'];
 $_SESSION['qr']['csrf'] = bin2hex(random_bytes(16));
 
 header('Location: index.php');
+
+

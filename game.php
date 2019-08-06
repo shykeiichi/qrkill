@@ -35,6 +35,9 @@ if($event['ongoing'] != 1)
 $sql = 'SELECT u.name, u.class, p.alive FROM qr_players AS p RIGHT JOIN qr_users AS u ON p.qr_users_id = u.id WHERE p.qr_users_id = ? AND p.qr_events_id = ?';
 $model['target'] = DB::prepare($sql)->execute([$event['target'], $event['id']])->fetch();
 
+$sql = 'SELECT COUNT(qr_kills.id) AS score FROM qr_players JOIN qr_kills ON qr_kills.killer = qr_players.qr_users_id WHERE qr_players.qr_users_id = ? AND qr_players.qr_events_id = ?';
+$model['kills'] = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetchColumn();
+
 if($model['target']['alive'] == 0)
 {
     die('Du vann!');

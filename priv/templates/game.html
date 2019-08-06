@@ -1,35 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+{% extends "base.html" %}
+
+{% block head %}
+    {{ parent() }}
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@master/qrcode.min.js"></script>
     <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-</head>
-<body>
-    <h1>QRKill</h1>
-    <a href="logout.php">Logga ut</a>
-    <noscript>
-        QRKill behöver JavaScript för att fungera, vänligen aktivera det och ladda om sidan.
-    </noscript>
-    <div>
-        Ditt mål heter <span id="targetName">{{ target.name }}</span> och går i <span id="targetClass">{{ target.class }}</span>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="jumbotron bg-dark">
+                <h3 class="display-4">Ditt mål</h3>
+                Förnamn: {{ target.name|split(' ', 2)[0] }}<br>
+                Förnamn: {{ target.name|split(' ', 2)[1] }}<br>
+                Klass: {{ target.class }}<br>
+                <hr class="my-4 bg-white">
+                <video class="embed-responsive" id="preview" hidden></video>
+                <div id="manual" hidden>
+                    <p>
+                        Din webbläsare har inte stöd för att skanna QR-koder. Vänligen ange koden manuellt istället.
+                    </p>
+                    <div class="row">
+                        <div class="col">   
+                            <input class="form-control" type="text" id="code" placeholder="Ange kod" required>
+                        </div>
+                        <button class="btn btn-secondary" onclick="submitCode()">Mörda</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron bg-dark">
+                <h3 class="display-4">Din information</h3>
+                Förnamn: {{ session.qr.name|split(' ', 2)[0] }}<br>
+                Efternamn: {{ session.qr.name|split(' ', 2)[1] }}<br>
+                Klass: {{ session.qr.class }}<br>
+                Poäng: {{ kills }}<br>
+                Kod: <span id="secret">{{ event.secret }}</span>
+                <hr class="my-4 bg-white">
+                <div id="qrcode" class="mt-4 row d-flex justify-content-center"></div>
+            </div>
+        </div>
     </div>
-    <div id="qrcode"></div>
-    <p>
-        Din kod är <span id="secret">{{ event.secret }}</span>. Ange den om din mördare inte kan skanna QR-koder.
-    </p>    
-    
-    <video id="preview" hidden></video>
-    <div id="manual" hidden>
-        <p>
-            Det verkar som om du inte kan använda kameran för att skanna QR-koder. Vänligen ange koden manuellt istället.
-        </p>
-        <input type="text" id="code" placeholder="Ange kod" required>
-        <button onclick="submitCode()">Mörda</button>
-    </div>
+
     <script src="static/main.js"></script>
-</body>
-</html>
+{% endblock %}

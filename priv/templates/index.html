@@ -1,15 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>QRKill</h1>
-    
-    <a href="login.php">Logga in</a> för att spela!
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="jumbotron bg-dark">
+                <h3 class="display-4">Om leken</h3>
+                QRKill är en digital version av leken "Killer Game". 
+                <h3>Regler</h3>
+                <ul>
+                    <li>Regler 1</li>
+                    <li>Regler 2</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron bg-dark">
+                <h3 class="display-4">Logga in</h3>
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                <p>Du loggar in på QRKill med ditt skolkonto.</p>
+                <form action="login.php" method="post">
+                    <div class="form-group">
+                        <label for="username">Användarnamn</label>
+                        <input class="form-control" type="text" name="username" id="username" placeholder="Ange användarnamn" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Lösenord</label>
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Ange lösenord" required>
+                    </div>
+                    <button class="btn btn-secondary" type="submit">Logga in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
