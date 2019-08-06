@@ -14,13 +14,8 @@ Instascan.Camera.getCameras()
 });
 
 function setCamera(isCamera) {
-    if(isCamera) {
-        document.getElementById('manual').hidden = true;
-        document.getElementById('preview').hidden = false;
-    } else {
-        document.getElementById('manual').hidden = false;
-        document.getElementById('preview').hidden = true;
-    }
+    document.getElementById('manual').hidden = isCamera;
+    document.getElementById('preview').hidden = !isCamera;
 }
 
 function submitCode(secret) {
@@ -38,6 +33,6 @@ function handleKill(resp) {
     if(resp.error != null) {
         alert(resp.error);
     } else if(resp.code === 3) {
-        window.location = window.location;
+        $('#killModal').modal();
     }
 }

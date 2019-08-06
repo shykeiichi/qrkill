@@ -3,50 +3,56 @@
 
 {% block content %}
     <div class="container">
-        <h3>Event</h3>
-        <div class="col-4">
-            <form action="event.php" method="POST">
-                <input type="hidden" name="id" value="{{ event.id }}">
-                <div class="form-group">
-                    <label for="name">Eventnamn</label>
-                    <input class="form-control" type="text" name="name" id="name" placeholder="Ange eventnamn" required autocomplete="off" value="{{ event.name }}">
-                </div>
-                <div>
-                    <label for="start_date">Starttid</label>
-                    <input class="form-control" type="datetime-local" name="start_date" id="start_date" required value="{{ event.start_date|replace({' ' : 'T'}) }}">
-                </div>
-                <div>
-                    <label for="end_date">Sluttid</label>
-                    <input class="form-control" type="datetime-local" name="end_date" id="end_date" required value="{{ event.end_date|replace({' ': 'T'}) }}">
-                </div>
-                <div>
-                    <label for="display_date">Visningstid</label>
-                    <input class="form-control" type="datetime-local" name="display_date" id="display_date" required value="{{ event.display_date|replace({' ': 'T'}) }}">
-                </div>
-                <div class="pt-3">                
-                    <input class="btn btn-warning" type="submit" name="action" value="Uppdatera">
-                    <input class="btn btn-danger" type="submit" name="action" value="Radera">
-                    {% if users %}
-                        <input class="btn btn-dark" type="submit" name="action" value="Tilldela mål">
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error }}
+        <div class="row">
+            <div class="col">
+                <h3>Event</h3>
+                <form action="event.php" method="POST">
+                    <input type="hidden" name="id" value="{{ event.id }}">
+                    <div class="form-group">
+                        <label for="name">Eventnamn</label>
+                        <input class="form-control" type="text" name="name" id="name" placeholder="Ange eventnamn" required autocomplete="off" value="{{ event.name }}">
+                    </div>
+                    <div>
+                        <label for="start_date">Starttid</label>
+                        <input class="form-control" type="datetime-local" name="start_date" id="start_date" required value="{{ event.start_date|replace({' ' : 'T'}) }}">
+                    </div>
+                    <div>
+                        <label for="end_date">Sluttid</label>
+                        <input class="form-control" type="datetime-local" name="end_date" id="end_date" required value="{{ event.end_date|replace({' ': 'T'}) }}">
+                    </div>
+                    <div>
+                        <label for="display_date">Visningstid</label>
+                        <input class="form-control" type="datetime-local" name="display_date" id="display_date" required value="{{ event.display_date|replace({' ': 'T'}) }}">
+                    </div>
+                    <div class="pt-3">                
+                        <input class="btn btn-warning" type="submit" name="action" value="Uppdatera">
+                        <input class="btn btn-danger" type="submit" name="action" value="Radera">
+                        {% if users %}
+                            <input class="btn btn-dark" type="submit" name="action" value="Tilldela mål">
+                        {% endif %}
+                    </div>
+                </form>
             </div>
-        {% endif %}
-        <h4>Importera</h4>
-        <div class="col-4">
-            <form action="event.php" method="POST">
-                <div class="form-group">
-                    <label for="">Vitlista. Kommaseparerade klasser. Lämna fältet tomt om du vill inkludera alla elever.</label>
-                    <input class="form-control" name="whitelist" type="text" placeholder="Ange klasser">
-                </div>
-                <input type="hidden" name="id" value="{{ event.id }}">
-                <input class="btn btn-dark" type="submit" name="action" value="Lägg till användare">
-            </form>
+            <div class="col">
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                <h4>Importera</h4>
+                <form action="event.php" method="POST">
+                    <div class="form-group">
+                        <label for="">Vitlista. Kommaseparerade klasser. Lämna fältet tomt om du vill inkludera alla elever.</label>
+                        <input class="form-control" name="whitelist" type="text" placeholder="Ange klasser">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Vitlista för elever. CSV igen.</label>
+                        <input class="form-control" name="whitelistStudents" type="text" placeholder="Ange elever">
+                    </div>
+                    <input type="hidden" name="id" value="{{ event.id }}">
+                    <input class="btn btn-dark" type="submit" name="action" value="Lägg till användare">
+                </form>
+            </div>
         </div>
         <h4 class="mt-4">Deltagare ({{ users|length }})</h4>
         {% if not users %}
