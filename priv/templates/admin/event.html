@@ -19,6 +19,10 @@
                     <label for="end_date">Sluttid</label>
                     <input class="form-control" type="datetime-local" name="end_date" id="end_date" required value="{{ event.end_date|replace({' ': 'T'}) }}">
                 </div>
+                <div>
+                    <label for="display_date">Visningstid</label>
+                    <input class="form-control" type="datetime-local" name="display_date" id="display_date" required value="{{ event.display_date|replace({' ': 'T'}) }}">
+                </div>
                 <div class="pt-3">                
                     <input class="btn btn-warning" type="submit" name="action" value="Uppdatera">
                     <input class="btn btn-danger" type="submit" name="action" value="Radera">

@@ -35,4 +35,9 @@ if($event['ongoing'] != 1)
 $sql = 'SELECT u.name, u.class, p.alive FROM qr_players AS p RIGHT JOIN qr_users AS u ON p.qr_users_id = u.id WHERE p.qr_users_id = ? AND p.qr_events_id = ?';
 $model['target'] = DB::prepare($sql)->execute([$event['target'], $event['id']])->fetch();
 
+if($model['target']['alive'] == 0)
+{
+    die('Du vann!');
+}
+
 echo $twig->render('game.html', $model);

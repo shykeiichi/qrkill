@@ -58,8 +58,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     if($_POST['action'] == 'Uppdatera')
     {
-        $sql = 'UPDATE qr_events SET name = ?, start_date = ?, end_date = ?';
-        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date']]);
+        $sql = 'UPDATE qr_events SET name = ?, start_date = ?, end_date = ?, display_date = ?';
+        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
         header('Location: event.php?id=' . $_POST['id']);
         die();
     }
