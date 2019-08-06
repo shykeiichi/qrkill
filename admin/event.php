@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
         die('Kunde inte hitta eventet med ID' . htmlentities($_GET['id']));
     }
 
-    $sql = 'SELECT qr_users.*, qr_players.secret FROM qr_players RIGHT JOIN qr_users ON qr_players.qr_users_id = qr_users.id WHERE qr_players.qr_events_id = ?';
+    $sql = 'SELECT qr_users.*, qr_players.secret, qr_players.target FROM qr_players RIGHT JOIN qr_users ON qr_players.qr_users_id = qr_users.id WHERE qr_players.qr_events_id = ?';
     $model['users'] = DB::prepare($sql)->execute([$_GET['id']])->fetchAll();
 
     echo $twig->render('admin/event.html', $model);
@@ -46,6 +46,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     if($_POST['action'] == 'Radera')
     {
+        $sql = 'DELETE FROM qr_players WHERE qr_events_id = ?';
+        DB::prepare($sql)->execute([$_POST['id']]);
+
         $sql = 'DELETE FROM qr_events WHERE id = ?';
         DB::prepare($sql)->execute([$_POST['id']]);
         header('Location: index.php');
@@ -94,4 +97,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         die();
     }
     
+    if($_POST['action'] === 'Tilldela mål')
+    {
+        $sql = 'SELECT * FROM qr_players WHERE qr_events_id = ?';
+        $users = DB::prepare($sql)->execute([$_POST['id']])->fetchAll();
+        shuffle($users);
+        
+        $sql = 'UPDATE qr_players SET target = ? WHERE qr_users_id = ? AND qr_events_id = ?';
+        foreach($users as $key => $user)
+        {
+            $id = isset($users[$key + 1]) ? $users[$key + 1]['qr_users_id'] : $users[0]['qr_users_id'];
+            DB::prepare($sql)->execute([$id, $user['qr_users_id'], $_POST['id']]);
+        }
+        header('Location: event.php?id=' . $_POST['id']);
+        die();
+    }
 }

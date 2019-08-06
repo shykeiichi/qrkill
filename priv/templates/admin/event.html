@@ -16,12 +16,15 @@
                     <input class="form-control" type="datetime-local" name="start_date" id="start_date" required value="{{ event.start_date|replace({' ' : 'T'}) }}">
                 </div>
                 <div>
-                    <label for="end_time">Sluttid</label>
-                    <input class="form-control" type="datetime-local" name="end_time" id="end_time" required value="{{ event.end_date|replace({' ': 'T'}) }}">
+                    <label for="end_date">Sluttid</label>
+                    <input class="form-control" type="datetime-local" name="end_date" id="end_date" required value="{{ event.end_date|replace({' ': 'T'}) }}">
                 </div>
                 <div class="pt-3">                
                     <input class="btn btn-warning" type="submit" name="action" value="Uppdatera">
                     <input class="btn btn-danger" type="submit" name="action" value="Radera">
+                    {% if users %}
+                        <input class="btn btn-dark" type="submit" name="action" value="Tilldela mål">
+                    {% endif %}
                 </div>
             </form>
         </div>
@@ -41,7 +44,7 @@
                 <input class="btn btn-dark" type="submit" name="action" value="Lägg till användare">
             </form>
         </div>
-        <h4>Deltagare</h4>
+        <h4 class="mt-4">Deltagare ({{ users|length }})</h4>
         {% if not users %}
             <p>
                 Det finns inga användare registrerade på eventet.
@@ -50,18 +53,22 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Namn</th>
                         <th>Klass</th>
                         <th>Hemlis</th>
+                        <th>Mål</th>
                         <th>?</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                         <tr>
+                            <td>{{ user.id }}</td>
                             <td>{{ user.name }}</td>
                             <td>{{ user.class }}</td>
                             <td>{{ user.secret }}</td>
+                            <td>{{ user.target }}</td>
                             <td>
                                 <form action="event.php" method="post">
                                     <input type="hidden" name="userId" value="{{ user.id }}">

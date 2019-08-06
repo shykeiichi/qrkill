@@ -7,7 +7,7 @@ require_once '../priv/pdo.php';
 
 if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
 {
-    header('Location: index.php');
+    header('Location: ../index.php');
     die();
 }
 

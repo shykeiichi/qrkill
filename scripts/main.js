@@ -14,10 +14,10 @@ Instascan.Camera.getCameras()
         console.error(e);
     });
 
-function submitCode(code) {
+function submitCode(secret) {
     fetch('kill.php', {
         method: 'POST',
-        body: JSON.stringify({code})
+        body: JSON.stringify({secret})
     })
     .then(resp => resp.json())
     .then(json => alert(JSON.stringify(json)))
