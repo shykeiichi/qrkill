@@ -1,0 +1,21 @@
+{% extends "info_base.html" %}
+{% block jumbo %}
+    <h3 class="display-4">Logga in</h3>
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
+    <p>Du loggar in på QRKill med ditt skolkonto.</p>
+    <form action="login.php" method="post">
+        <div class="form-group">
+            <label for="username">Användarnamn</label>
+            <input class="form-control" type="text" name="username" id="username" placeholder="Ange användarnamn" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Lösenord</label>
+            <input class="form-control" type="password" name="password" id="password" placeholder="Ange lösenord" required>
+        </div>
+        <button class="btn btn-secondary" type="submit">Logga in</button>
+    </form>
+{% endblock %}

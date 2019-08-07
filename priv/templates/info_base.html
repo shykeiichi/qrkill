@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="jumbotron bg-dark">
+                <h3 class="display-4">Om leken</h3>
+                QRKill är en digital version av leken "Killer Game". 
+                <h3>Regler</h3>
+                <ul>
+                    <li>Regler 1</li>
+                    <li>Regler 2</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron bg-dark">
+                {% block jumbo %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

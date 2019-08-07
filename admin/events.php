@@ -45,7 +45,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         $sql = 'INSERT INTO qr_events (name, start_date, end_date, display_date) VALUES (?, ?, ?, ?)';
         DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
-        header('Location: event.php?id=' . DB::lastInsertId());
+        header('Location: events.php?id=' . DB::lastInsertId());
         die();
     }
 
@@ -66,7 +66,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         $sql = 'UPDATE qr_events SET name = ?, start_date = ?, end_date = ?, display_date = ?';
         DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
-        header('Location: event.php?id=' . $_POST['id']);
+        header('Location: events.php?id=' . $_POST['id']);
         die();
     }
 
@@ -99,7 +99,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             DB::prepare($sql)->execute([$_POST['id'], $user['id'], $secret]);
         }
         
-        header('Location: event.php?id=' . $_POST['id']);
+        header('Location: events.php?id=' . $_POST['id']);
         die();
     }
 
@@ -107,7 +107,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         $sql = 'DELETE FROM qr_players WHERE qr_events_id = ? AND qr_users_id = ?';
         DB::prepare($sql)->execute([$_POST['eventId'], $_POST['userId']]);
-        header('Location: event.php?id=' . $_POST['eventId']);
+        header('Location: events.php?id=' . $_POST['eventId']);
         die();
     }
     
@@ -123,7 +123,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             $id = isset($users[$key + 1]) ? $users[$key + 1]['qr_users_id'] : $users[0]['qr_users_id'];
             DB::prepare($sql)->execute([$id, $user['qr_users_id'], $_POST['id']]);
         }
-        header('Location: event.php?id=' . $_POST['id']);
+        header('Location: events.php?id=' . $_POST['id']);
         die();
     }
 }

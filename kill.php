@@ -12,7 +12,11 @@ if(!isset($_SESSION['qr']['id']))
     die();
 }
 
-$sql = 'SELECT qr_players.alive, (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) as killed FROM qr_events RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id WHERE qr_players.qr_users_id = ? AND CURRENT_DATE < end_date AND CURRENT_DATE > start_date';
+$sql = '
+SELECT qr_players.alive, (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) as killed 
+FROM qr_events RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id 
+WHERE qr_players.qr_users_id = ? AND CURRENT_DATE < end_date AND CURRENT_DATE > start_date
+';
 $info =  DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']])->fetch();
 
 if($info['alive'] === '0')

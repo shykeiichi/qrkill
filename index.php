@@ -9,4 +9,4 @@ if(isset($_SESSION['qr']['id']))
     die();
 }
 
-echo $twig->render('index.html');
+echo $twig->render('login.html');

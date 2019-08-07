@@ -11,9 +11,9 @@
         <div class="col-md-6">
             <div class="jumbotron bg-dark">
                 <h3 class="display-4">Ditt mål</h3>
-                Förnamn: {{ target.name|split(' ', 2)[0] }}<br>
-                Efternamn: {{ target.name|split(' ', 2)[1] }}<br>
-                Klass: {{ target.class }}<br>
+                Förnamn: {{ player.target_name|split(' ', 2)[0] }}<br>
+                Efternamn: {{ player.target_name|split(' ', 2)[1] }}<br>
+                Klass: {{ player.target_class }}<br>
                 <hr class="my-4 bg-white">
                 <video class="embed-responsive" id="preview" hidden></video>
                 <div id="manual" hidden>
@@ -35,10 +35,25 @@
                 Förnamn: {{ session.qr.name|split(' ', 2)[0] }}<br>
                 Efternamn: {{ session.qr.name|split(' ', 2)[1] }}<br>
                 Klass: {{ session.qr.class }}<br>
-                Poäng: {{ kills }}<br>
-                Kod: <span id="secret">{{ event.secret }}</span>
+                Poäng: {{ player.score }}<br>
+                Kod: <span id="secret">{{ player.secret }}</span>
                 <hr class="my-4 bg-white">
                 <div id="qrcode" class="mt-4 row d-flex justify-content-center"></div>
+                <hr class="my-4 bg-white">
+                {% if victims %}
+                    Dina offer:
+                    <table class="table table-dark">
+                        <tbody>
+                            {% for victim in victims %}
+                                <tr>
+                                    <td>{{ victim.name }}</td>
+                                    <td>{{ victim.class }}</td>
+                                    <td>{{ victim.created_date|date('m/d H:i') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
             </div>
         </div>
     </div> 
