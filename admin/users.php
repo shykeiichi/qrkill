@@ -12,17 +12,33 @@ if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
 }
 
 
+if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']))
+{ 
+    $sql = 'SELECT * FROM qr_users WHERE id = ?';
+    $model['blob'] = DB::prepare($sql)->execute([$_GET['id']])->fetch(); 
+    echo $twig->render('admin/blob.html', $model);
+    die();
+}
+
 if($_SERVER['REQUEST_METHOD'] === 'GET')
-{
+{ 
     $sql = 'SELECT * FROM qr_users';
     $model['users'] = DB::prepare($sql)->execute()->fetchAll(); 
-    echo $twig->render('admin/user.html', $model);
+    echo $twig->render('admin/users.html', $model);
     die();
 }
 
 
 if($_SERVER['REQUEST_METHOD'] === 'POST')
 {
+    if($_POST['action'] === 'Skapa')
+    {
+        $sql = 'INSERT INTO qr_users (username, name, class, is_admin) VALUES (?, ?, ?, ?)';
+        DB::prepare($sql)->execute([$_POST['username'], $_POST['name'], $_POST['class'], $_POST['is_admin']]);
+        header('Location: users.php?id='.DB::lastInsertId());
+        die();
+    }
+
     if($_POST['action'] === 'Importera alla användare')
     {
         $ldap = ldap_connect("ldaps://ad.ssis.nu") or die('ldap_connect failed');
@@ -32,7 +48,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         $users = ldap_get_entries($ldap, $search) or die('ldap_get_entries failed');
     
         unset($users['count']);
-
 
         foreach($users as $key => $user)
         {
@@ -53,7 +68,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             DB::prepare($sql)->execute([$username, $name, $class, $class]);
             
         }
-
+        header('Location: users.php');
+        die();
     }
 }
 

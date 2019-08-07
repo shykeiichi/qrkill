@@ -1,0 +1,75 @@
+{% extends "admin/base.html" %}
+{% block title %}Användare{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <h3>Importera elever från AD:t</h3>
+            <form action="users.php" method="post">
+                <div class="form-group">
+                    <label for="username">Användarnamn</label>
+                    <input class="form-control" type="text" name="username" id="username" value="{{ session.qr.username }}" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password">Lösenord</label>
+                    <input class="form-control" type="password" name="password" id="password" required>
+                </div>
+                <input class="btn btn-dark" type="submit" name="action" value="Importera alla användare">
+            </form>
+        </div>
+        <div class="col">
+            <h3>Skapa användare manuellt</h3>
+            <form action="users.php" method="post">
+                <div class="form-group">
+                    <label for="username">Användarnamn</label>
+                    <input class="form-control" type="text" name="username" id="username" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="name">Namn</label>
+                    <input class="form-control" type="text" name="name" id="name" required >
+                </div>
+                <div class="form-group">
+                    <label for="class">Klass</label>
+                    <input class="form-control" type="text" name="class" id="class" required >
+                </div>
+                <div class="form-group">
+                    <label for="is_admin">Admin</label>
+                    <input class="form-control" type="number" min="0" max="1" name="is_admin" id="is_admin" required >
+                </div>
+                    
+                <input class="btn btn-dark" type="submit" name="action" value="Skapa">
+            </form>
+        </div>
+    </div>
+
+    <h3>Användare ({{ users|length }})</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Användarnamn</th>
+                <th>Namn</th>
+                <th>Klass</th>
+                <th>Roll</th>
+                <th>Registrerad datum</th>
+                <th>?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.class }}</td>
+                    <td>{{ user.is_admin ? 'Admin' : 'Användare' }}</td>
+                    <td>{{ user.created_date }}</td>
+                    <td><a class="btn btn-info" href="users.php?id={{ user.id }}">Visa</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

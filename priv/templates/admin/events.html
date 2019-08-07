@@ -1,0 +1,61 @@
+{% extends "admin/base.html" %}
+
+
+{% block content %}
+    <div class="col-4">
+    <h3>Skapa nytt event</h3>
+        <form action="event.php" method="POST">
+            <div class="form-group">
+                <label for="name">Eventnamn</label>
+                <input class="form-control" type="text" name="name" id="name" placeholder="Ange eventnamn" required autocomplete="off">
+            </div>
+            <div>
+                <label for="start_date">Starttid</label>
+                <input class="form-control" type="datetime-local" name="start_date" id="start_date" required>
+            </div>
+            <div>
+                <label for="end_date">Sluttid</label>
+                <input class="form-control" type="datetime-local" name="end_date" id="end_date" required>
+            </div>
+            <div>
+                <label for="display_date">Visningstid</label>
+                <input class="form-control" type="datetime-local" name="display_date" id="display_date" required>
+            </div>
+            <div class="pt-3">                
+                <input class="btn btn-dark" type="submit" name="action" value="Skapa">
+            </div> 
+        </form>
+    </div>
+
+    <h3>Events</h3>
+    {% if not events %}
+        <p>
+            Det finns inga registrerade event.
+        </p>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Namn</th>
+                    <th>Start</th>
+                    <th>Slut</th>
+                    <th>Skapad</th>
+                    <th>?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.start_date }}</td>
+                        <td>{{ event.end_date }}</td>
+                        <td>{{ event.created_date }}</td>
+                        <td><a class="btn btn-info" href="events.php?id={{ event.id }}">Visa</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

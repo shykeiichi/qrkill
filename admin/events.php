@@ -15,8 +15,13 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
     if(!isset($_GET['id']))
     {
-        die('Du måste ange ID.');
+        $sql = 'SELECT * FROM qr_events';
+        $model['events'] = DB::prepare($sql)->execute()->fetchAll();
+        echo $twig->render('admin/events.html', $model);
+        die();
     }
+
+    
     $sql = 'SELECT * FROM qr_events WHERE id = ?';
     $model['event'] = DB::prepare($sql)->execute([$_GET['id']])->fetch();
 
@@ -24,10 +29,10 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
     if(empty($model['event']))
     {
         http_response_code(404);
-        die('Kunde inte hitta eventet med ID' . htmlentities($_GET['id']));
+        die('Kunde inte hitta eventet');
     }
 
-    $sql = 'SELECT qr_users.*, qr_players.secret, qr_players.target FROM qr_players RIGHT JOIN qr_users ON qr_players.qr_users_id = qr_users.id WHERE qr_players.qr_events_id = ?';
+    $sql = 'SELECT qr_users.*, qr_players.secret, qr_players.target, qr_players.alive FROM qr_players RIGHT JOIN qr_users ON qr_players.qr_users_id = qr_users.id WHERE qr_players.qr_events_id = ?';
     $model['users'] = DB::prepare($sql)->execute([$_GET['id']])->fetchAll();
 
     echo $twig->render('admin/event.html', $model);
@@ -46,6 +51,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     if($_POST['action'] == 'Radera')
     {
+
         $sql = 'DELETE FROM qr_players WHERE qr_events_id = ?';
         DB::prepare($sql)->execute([$_POST['id']]);
 
