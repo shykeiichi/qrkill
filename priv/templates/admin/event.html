@@ -42,11 +42,11 @@
             <form action="events.php" method="POST">
                 <div class="form-group">
                     <label for="">Vitlista. Kommaseparerade klasser. Lämna fältet tomt om du vill inkludera alla elever.</label>
-                    <input class="form-control" name="whitelist" type="text" placeholder="Ange klasser">
+                    <input class="form-control" name="whitelist" type="text" placeholder="Ange klasser" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="">Vitlista för elever. CSV igen.</label>
-                    <input class="form-control" name="whitelistStudents" type="text" placeholder="Ange elever">
+                    <input class="form-control" name="whitelistStudents" type="text" placeholder="Ange elever" autocomplete="off">
                 </div>
                 <input type="hidden" name="id" value="{{ event.id }}">
                 <input class="btn btn-dark" type="submit" name="action" value="Lägg till användare">

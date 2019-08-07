@@ -31,8 +31,20 @@ function submitCode(secret) {
 
 function handleKill(resp) {
     if(resp.error != null) {
-        alert(resp.error);
+        document.getElementById('errorMessage').innerText = resp.error;
+        $('#failModal').modal();
     } else if(resp.code === 3) {
         $('#killModal').modal();
     }
 }
+
+// Jag är inte stolt över detta
+function checkAlive() {
+    fetch('alive.php')
+    .then(resp => resp.json())
+    .then(json => {
+        if(json.alive != '1') window.location = window.location 
+    })
+}
+
+setInterval(checkAlive, 1000 * 30);

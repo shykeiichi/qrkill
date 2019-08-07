@@ -82,7 +82,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         else if($_POST['whitelistStudents'] !== '')
         {
             $usernames = explode(',', $_POST['whitelistStudents']);
-            $in = str_repeat('?,', count($classes) - 1) . '?';
+            $in = str_repeat('?,', count($usernames) - 1) . '?';
             $sql = "SELECT id FROM qr_users WHERE username IN ($in)";
             $users = DB::prepare($sql)->execute($usernames)->fetchAll();
         }

@@ -13,7 +13,7 @@ if(isset($_SESSION['qr']['id']))
  
 if ($_SERVER['REQUEST_METHOD'] === 'GET')
 {
-	echo $twig->render('index.html');
+	header('Location: index.php');
 	die();
 }
 

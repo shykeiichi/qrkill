@@ -12,6 +12,16 @@ if(!isset($_SESSION['qr']['id']))
     die();
 }
 
+
+$sql = 'SELECT alive FROM qr_players WHERE qr_users_id = ?';
+$alive = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetchColumn();
+
+if($alive != '1')
+{
+    echo json_encode(['error' => 'Du är tyvärr död och kan inte mörda någon.']);
+    die();
+}
+
 $sql = '
 SELECT qr_players.alive, (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) as killed 
 FROM qr_events RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id 
