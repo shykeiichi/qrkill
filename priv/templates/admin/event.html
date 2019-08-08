@@ -78,7 +78,12 @@
                         <td>{{ user.name }}</td>
                         <td>{{ user.class }}</td>
                         <td>{{ user.secret }}</td>
-                        <td>{{ user.target }}</td>
+                        {% if user.target != 0 %}
+                            
+                            <td>{{ userMap[user.target] }} ({{ user.target }})</td>
+                        {% else %}
+                            <td><p class="bg-danger">Odefinerat</p></td>
+                        {% endif %}
                         <td>{{ user.alive == '1' ? 'Ja' : 'Nej' }}</td>
                         <td>
                             <form action="events.php" method="post">

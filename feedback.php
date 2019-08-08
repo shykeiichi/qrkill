@@ -3,6 +3,7 @@
 session_start();
 
 require_once 'priv/pdo.php';
+require_once 'priv/errorhandler.php';
 
 header('Location: index.php');
 

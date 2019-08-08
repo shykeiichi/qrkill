@@ -4,6 +4,7 @@ session_start();
 
 require_once '../priv/twig.php';
 require_once '../priv/pdo.php';
+require_once '../priv/errorhandler.php';
 
 if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
 {
@@ -33,8 +34,14 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
     }
 
     $sql = 'SELECT qr_users.*, qr_players.secret, qr_players.target, qr_players.alive FROM qr_players RIGHT JOIN qr_users ON qr_players.qr_users_id = qr_users.id WHERE qr_players.qr_events_id = ?';
-    $model['users'] = DB::prepare($sql)->execute([$_GET['id']])->fetchAll();
+    $users = DB::prepare($sql)->execute([$_GET['id']])->fetchAll();
+    $model['users'] = $users;
 
+    foreach($users as $user)
+    {
+        $model['userMap'][$user['id']] = $user['name'];
+    }
+    
     echo $twig->render('admin/event.html', $model);
     die();
 }
@@ -105,6 +112,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     if($_POST['action'] === 'Ta bort')
     {
+        $sql = '
+        UPDATE qr_players AS del_user
+        INNER JOIN qr_players AS target ON target.qr_users_id = del_user.target
+        INNER JOIN qr_players AS hunter ON hunter.target = del_user.qr_users_id
+        SET hunter.target = target.qr_users_id
+        WHERE del_user.qr_users_id = ? AND del_user.qr_events_id = ?
+        ';
+        DB::prepare($sql)->execute([$_POST['userId'], $_POST['eventId']]);
+
         $sql = 'DELETE FROM qr_players WHERE qr_events_id = ? AND qr_users_id = ?';
         DB::prepare($sql)->execute([$_POST['eventId'], $_POST['userId']]);
         header('Location: events.php?id=' . $_POST['eventId']);

@@ -4,6 +4,7 @@ session_start();
 
 include_once('../priv/pdo.php');
 include_once('../priv/twig.php');
+require_once '../priv/errorhandler.php';
 
 if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
 {

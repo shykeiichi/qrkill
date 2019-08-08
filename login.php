@@ -1,10 +1,10 @@
 <?php
 
 session_start();
-error_reporting(0);
 
 include_once('priv/pdo.php');
 include_once('priv/twig.php');
+require_once 'priv/errorhandler.php';
 
 if(isset($_SESSION['qr']['id']))
 {

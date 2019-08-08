@@ -3,6 +3,7 @@
 session_start();
 
 require_once 'priv/pdo.php';
+require_once 'priv/errorhandler.php';
 
 $secret = json_decode(file_get_contents('php://input'), true)['secret'];
 

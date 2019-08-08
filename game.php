@@ -3,6 +3,7 @@ session_start();
 
 require_once 'priv/twig.php';
 require_once 'priv/pdo.php';
+require_once 'priv/errorhandler.php';
 
 if(!isset($_SESSION['qr']['id']))
 {
@@ -42,11 +43,11 @@ if($event['status'] == 3)
 }
 
 $sql = '
-SELECT player.secret, player.alive, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
+SELECT player.qr_users_id, player.secret, player.alive, player.target, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
 FROM qr_players AS player 
 LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
 LEFT OUTER JOIN qr_kills AS kills ON player.qr_users_id = kills.killer
-WHERE player.qr_users_id = 1 AND player.qr_events_id = 13
+WHERE player.qr_users_id = ? AND player.qr_events_id = ?
 ';
 $player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
 $model['player'] = $player;
@@ -54,6 +55,12 @@ $model['player'] = $player;
 if($player['alive'] == 0)
 {
     echo $twig->render('dead.html');
+    die();
+}
+
+if($player['qr_users_id'] == $player['target'])
+{
+    echo $twig->render('win.html', $model);
     die();
 }
 

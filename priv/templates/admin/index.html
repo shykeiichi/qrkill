@@ -4,5 +4,12 @@
 {% block content %}
     <h1>Admin</h1>
 
-    
+    <h3>Konfiguration</h3>
+    <form action="index.php" method="post">
+        <div class="form-group">
+            <label for="ga_track_id">Google track id</label>
+            <input class="form-control" type="text" name="ga_track_id" id="ga_track_id" value="{{ ga_track_id }}">
+        </div>
+        <button class="btn btn-secondary" type="submit">Spara</button>
+    </form>
 {% endblock %}
