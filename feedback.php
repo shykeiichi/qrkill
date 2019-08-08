@@ -5,18 +5,22 @@ session_start();
 require_once 'priv/pdo.php';
 require_once 'priv/errorhandler.php';
 
-header('Location: index.php');
+#header('Location: index.php');
 
 if($_SERVER['REQUEST_METHOD'] != 'POST')
 {
     die();
 }
 
-if(!isset($_POST['rate']) || !isset($_POST['feedback']) || !intval(isset($_POST['rate'])) > 4 || intval(isset($_POST['rate'])) < 1 || strlen(isset($_POST['feedback'])) > 510)
+if(
+   !isset($_POST['rate']) 
+|| !isset($_POST['feedback']) 
+|| intval($_POST['rate']) > 4 
+|| intval($_POST['rate']) < 1 
+|| strlen($_POST['feedback']) > 310)
 {
     die('Ogiltigt svar');
 }
-
 
 $sql = "
 SELECT qr_events.id, qr_players.feedback_given
