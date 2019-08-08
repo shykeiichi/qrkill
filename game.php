@@ -18,7 +18,7 @@ CASE
     WHEN NOW() > event.end_date THEN 3 -- The event is over and up for display
 END AS status
 FROM qr_events AS event RIGHT JOIN qr_players AS player ON event.id = player.qr_events_id 
-WHERE player.qr_users_id = ? AND CURRENT_DATE < display_date 
+WHERE player.qr_users_id = ? AND CURRENT_DATE < display_date LIMIT 1
 ";
 $event = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetch();
 $model['event'] = $event;
