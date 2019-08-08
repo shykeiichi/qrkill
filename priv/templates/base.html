@@ -18,20 +18,23 @@
 </head>
 <body class="bg-secondary text-light">
 <div class="container">
-
-    <div class="row p-4">
-        <div class="col">
-            <h1 class="">QRKill</h1>
+    {% block header %}
+        <div class="row p-4">
+            <div class="col">
+                <h1 class="">QRKill</h1>
+            </div>
+            <div class="col">
+                
+                {% if session.qr.id %}
+                    <a class="btn btn-dark float-right ml-1" href="logout.php">Logga ut</a>
+                {% endif %}
+                <a class="btn btn-dark float-right ml-1" href="scoreboard.php">Poängtavla</a>
+                {% if session.qr.is_admin == '1'%}
+                    <a class="btn btn-danger float-right" href="admin">Admin</a>
+                {% endif %}
+            </div>
         </div>
-        <div class="col">
-            {% if session.qr.is_admin == '1'%}
-                <a class="btn btn-danger" href="admin">Admin</a>
-            {% endif %}
-            {% if session.qr.id %}
-                <a class="btn btn-dark float-right" href="logout.php">Logga ut</a>
-            {% endif %}
-        </div>
-    </div>
+    {% endblock header %}
 
 
     {% block content %}{% endblock %}

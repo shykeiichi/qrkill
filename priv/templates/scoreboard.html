@@ -1,89 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Scoreboard</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body class="bg-secondary text-light">
-    <div class="container pt-5">
-        <div class="jumbotron bg-dark">
-                {% if not event %}
-                <h1>
-                    Det finns inget spel att visa poängtavla för!
-                </h1>
-            {% else %}
-            <div class="d-flex justify-content-center">
-                <h1>QRKill - {{ event.name }}</h1><br>
-            </div>
-            <div class="d-flex justify-content-center">
-                <h3 id="countdown">{{ event.end_date }}</h3>
-            </div>
-            <script>
-                var countDownDate = new Date('{{ event.end_date }}').getTime();
-                
-                const yeet = function() {
-                
-                    // Get today's date and time
-                    var now = new Date().getTime();
-                
-                    // Find the distance between now and the count down date
-                    var distance = countDownDate - now;
-                
-                    // Time calculations for days, hours, minutes and seconds
-                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
-                    // Display the result in the element with id="demo"
-                    document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
-                    + minutes + "m " + seconds + "s ";
-                
-                    // If the count down is finished, write some text 
-                    if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("countdown").innerHTML = "Avslutat!";
-                    }
-                }
+{% extends "base.html" %}
 
-                yeet();
+{% block title %}
+    Poängtavla
+{% endblock title %}
 
-                var x = setInterval(yeet, 1000);
-                
-            </script>
-                    
-                <table class="table table-striped table-dark">
-                    <thead>
-                        <tr>
-                            <th>Namn</th>
-                            <th>Klass</th>
-                            <th>Poäng</th>
-                            <th>I livet</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if not users %}
-                            <tr>
-                                <td colspan="4"><center>Ingen har blivit mördad än ) :</center></td>
-                            </tr>
-                        {% else %}
-                            {% for user in users %}
-                                <tr>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.class }}</td>
-                                    <td>{{ user.score }}</td>
-                                    <td>{{ user.alive == '1' ? 'Ja' : 'Nej' }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
+{% block header %}
+    <div class="row p-4">
+        <div class="col">
+            <h1 class="">QRKill</h1>
+        </div>
+        <div class="col">
+            
+            {% if session.qr.id %}
+                <a class="btn btn-dark float-right ml-1" href="logout.php">Logga ut</a>
+            {% endif %}
+            <a class="btn btn-dark float-right ml-1" href="game.php">Spel</a>
+            {% if session.qr.is_admin == '1'%}
+                <a class="btn btn-danger float-right" href="admin">Admin</a>
             {% endif %}
         </div>
     </div>
-</body>
-</html>
+{% endblock header %}
+
+{% block content %}
+    <div class="jumbotron bg-dark">
+            {% if not event %}
+            <h1>
+                Det finns inget spel att visa poängtavla för!
+            </h1>
+        {% else %}
+        <div class="d-flex justify-content-center">
+            <h1>QRKill - {{ event.name }}</h1><br>
+        </div>
+        <div class="d-flex justify-content-center">
+            <h3 id="countdown">{{ event.end_date }}</h3>
+        </div>
+        <script>
+            var countDownDate = new Date('{{ event.end_date }}').getTime();
+            
+            const yeet = function() {
+            
+                // Get today's date and time
+                var now = new Date().getTime();
+            
+                // Find the distance between now and the count down date
+                var distance = countDownDate - now;
+            
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+                // Display the result in the element with id="demo"
+                document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+                + minutes + "m " + seconds + "s ";
+            
+                // If the count down is finished, write some text 
+                if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Avslutat!";
+                }
+            }
+
+            yeet();
+
+            var x = setInterval(yeet, 1000);
+            
+        </script>
+                
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th>Namn</th>
+                        <th>Klass</th>
+                        <th>Poäng</th>
+                        <th>I livet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if not users %}
+                        <tr>
+                            <td colspan="4"><center>Ingen har blivit mördad än ) :</center></td>
+                        </tr>
+                    {% else %}
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.class }}</td>
+                                <td>{{ user.score }}</td>
+                                <td>{{ user.alive == '1' ? 'Ja' : 'Nej' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock content %}
