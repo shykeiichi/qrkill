@@ -19,7 +19,12 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
         die('Du måste ange event och spelar ID.');
     }
     
-    $sql = 'SELECT COUNT(qr_kills.id), qr_players.*, qr_users.* FROM qr_players JOIN qr_users JOIN qr_kills ON qr_kills.killer = qr_users.id = qr_players.qr_users_id WHERE qr_players.qr_users_id = ? AND qr_players.qr_events_id = ?';
+    $sql = '
+    SELECT COUNT(qr_kills.id), qr_players.*, qr_users.* 
+    FROM qr_players 
+    JOIN qr_users JOIN qr_kills ON qr_kills.killer = qr_users.id = qr_players.qr_users_id AND qr_kills.qr_events_id = qr_players.qr_events_id 
+    WHERE qr_players.qr_users_id = ? AND qr_players.qr_events_id = ?
+    ';
     $model['blob'] = DB::prepare($sql)->execute([$_GET['userId'], $_GET['eventId']])->fetch();
 
     echo $twig->render('admin/blob.html', $model);

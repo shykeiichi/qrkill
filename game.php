@@ -46,7 +46,7 @@ $sql = '
 SELECT player.qr_users_id, player.secret, player.alive, player.target, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
 FROM qr_players AS player 
 LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
-LEFT OUTER JOIN qr_kills AS kills ON player.qr_users_id = kills.killer
+LEFT OUTER JOIN qr_kills AS kills ON player.qr_users_id = kills.killer AND player.qr_events_id = kills.qr_events_id
 WHERE player.qr_users_id = ? AND player.qr_events_id = ?
 ';
 $player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
@@ -68,8 +68,8 @@ $sql = '
 SELECT victim.name, victim.class, qr_kills.created_date
 FROM qr_kills 
 RIGHT JOIN qr_users AS victim ON qr_kills.target = victim.id
-WHERE qr_kills.killer = ?
+WHERE qr_kills.killer = ? AND qr_kills.qr_events_id = ?
 ';
-$model['victims'] = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetchAll();
+$model['victims'] = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetchAll();
 
 echo $twig->render('game.html', $model);
