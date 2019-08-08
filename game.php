@@ -15,8 +15,7 @@ $sql = "
 SELECT event.id, event.name, event.start_date, event.end_date, player.feedback_given,
 CASE
     WHEN NOW() < event.start_date THEN 1 -- The event is starting and a countdown is shown
-    WHEN NOW() < event.end_date AND NOW() > event.start_date THEN 2 -- The event is ongoing
-    WHEN NOW() > event.end_date THEN 3 -- The event is over and up for display
+    WHEN NOW() > event.end_date THEN 2 -- The event is over and up for display
 END AS status
 FROM qr_events AS event RIGHT JOIN qr_players AS player ON event.id = player.qr_events_id 
 WHERE player.qr_users_id = ? AND CURRENT_DATE < display_date LIMIT 1
@@ -36,7 +35,7 @@ if($event['status'] == 1)
     die();
 }
 
-if($event['status'] == 3)
+if($event['status'] == 2)
 {
     echo $twig->render('eventover.html', $model);
     die();

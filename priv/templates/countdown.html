@@ -1,15 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Countdown - QRKill</title>
-</head>
-<body>
-    <h1>QRKill</h1>
-    <p>
-        Ditt nästa qrkill börjar {{ event.start_date }}
-    </p>
-</body>
-</html>
+{% extends "info_base.html" %}
+
+{% block title %}
+    Nedräkning
+{% endblock title %}
+
+{% block jumbo %}
+    <p>Ditt nästa QRKill-event börjar om <span id="countdown"></span>!</p>
+
+    <script>
+        var countDownDate = {{ date(event.start_date).timestamp * 1000 }};
+        const yeet = function() {
+        
+            var now = new Date().getTime();
+
+            var distance = countDownDate - now;
+        
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+            var stringyboi = days == 0 ? '' : days + "d ";
+            stringyboi += days == 0 && hours == 0 ? '' : hours + "h ";
+            stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
+            document.getElementById("countdown").innerHTML = stringyboi + seconds + "s";
+            if (distance < 1) {
+                window.location = window.location;
+            }
+        }
+        yeet();
+        setInterval(yeet, 1000);
+        
+    </script>
+{% endblock jumbo %}

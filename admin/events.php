@@ -58,10 +58,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     if($_POST['action'] == 'Radera')
     {
-
-        $sql = 'DELETE FROM qr_players WHERE qr_events_id = ?';
-        DB::prepare($sql)->execute([$_POST['id']]);
-
         $sql = 'DELETE FROM qr_events WHERE id = ?';
         DB::prepare($sql)->execute([$_POST['id']]);
         
