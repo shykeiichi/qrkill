@@ -11,7 +11,7 @@ if(!isset($_SESSION['qr']['id']))
 }
 
 $sql = "
-SELECT event.id, event.name, event.start_date, event.end_date, 
+SELECT event.id, event.name, event.start_date, event.end_date, player.feedback_given,
 CASE
     WHEN NOW() < event.start_date THEN 1 -- The event is starting and a countdown is shown
     WHEN NOW() < event.end_date AND NOW() > event.start_date THEN 2 -- The event is ongoing
@@ -37,7 +37,8 @@ if($event['status'] == 1)
 
 if($event['status'] == 3)
 {
-    die('Det är över');
+    echo $twig->render('eventover.html', $model);
+    die();
 }
 
 $sql = '

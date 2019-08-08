@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-#error_reporting(0);
+error_reporting(0);
 
 include_once('priv/pdo.php');
 include_once('priv/twig.php');
@@ -22,7 +22,7 @@ $bind = ldap_bind($ldap, $_POST['username'] . "@ad.ssis.nu", $_POST['password'])
 
 if(!$bind)
 {
-	echo $twig->render('index.html', ['error' => 'Ditt användarnamn eller lösenord var fel.']);
+	echo $twig->render('login.html', ['error' => 'Ditt användarnamn eller lösenord var fel.']);
 	die();
 }
 
@@ -31,7 +31,7 @@ $user = DB::prepare($sql)->execute([$_POST['username']])->fetch();
 
 if(!$user)
 {
-	echo $twig->render('index.html', ['error' => 'Du har inte registrerats i QRKill än. Kontakta Movitz om du borde vara det.']);
+	echo $twig->render('login.html', ['error' => 'Du har inte registrerats i QRKill än. Kontakta Movitz om du borde vara det.']);
 	die();
 }
 

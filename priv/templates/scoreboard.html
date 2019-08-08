@@ -46,7 +46,7 @@
                     // If the count down is finished, write some text 
                     if (distance < 0) {
                     clearInterval(x);
-                    document.getElementById("countdown").innerHTML = "Avslutat";
+                    document.getElementById("countdown").innerHTML = "Avslutat!";
                     }
                 }
 
@@ -68,7 +68,7 @@
                     <tbody>
                         {% if not users %}
                             <tr>
-                                <td colspan="4"><center>Ingen har blivit mördad än!</center></td>
+                                <td colspan="4"><center>Ingen har blivit mördad än ) :</center></td>
                             </tr>
                         {% else %}
                             {% for user in users %}

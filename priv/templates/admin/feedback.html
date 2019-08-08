@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <h1>Feedback</h1>
+    {% if not events %}
+        <p>Medelbetyg: {{ average }}</p>
+        <p>Antal betyg: {{ feedback|length }}</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Poäng</th>
+                    <th>Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feed in feedback %}
+                    <tr>
+                        <td>{{ feed.rate }}</td>
+                        <td>{{ feed.feedback }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Namn</th>
+                    <th>?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.name }}</td>
+                        <td><a class="btn btn-info" href="feedback.php?id={{ event.id }}">Visa</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock content %}
