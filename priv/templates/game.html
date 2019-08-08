@@ -10,23 +10,29 @@
     <div class="row">
         <div class="col-md-6">
             <div class="jumbotron bg-dark">
-                <h3 class="display-4">Ditt mål</h3>
-                Förnamn: {{ player.target_name|split(' ', 2)[0] }}<br>
-                Efternamn: {{ player.target_name|split(' ', 2)[1] }}<br>
-                Klass: {{ player.target_class }}<br>
-                <hr class="my-4 bg-white">
-                <video class="embed-responsive" id="preview" hidden></video>
-                <div id="manual" hidden>
-                    <p>
-                        Din webbläsare har inte stöd för att skanna QR-koder. Vänligen ange koden manuellt istället.
-                    </p>
-                    <div class="row">
-                        <div class="col">   
-                            <input class="form-control" type="text" id="code" placeholder="Ange kod" required>
+                {% if player.target_name %}
+                    <h3 class="display-4">Ditt mål</h3>
+                    Förnamn: {{ player.target_name|split(' ', 2)[0] }}<br>
+                    Efternamn: {{ player.target_name|split(' ', 2)[1] }}<br>
+                    Klass: {{ player.target_class }}<br>
+                    <hr class="my-4 bg-white">
+                    <video class="embed-responsive" id="preview" hidden></video>
+                    <div id="manual" hidden>
+                        <p>
+                            Din webbläsare har inte stöd för att skanna QR-koder. Vänligen ange koden manuellt istället.
+                        </p>
+                        <div class="row">
+                            <div class="col">   
+                                <input class="form-control" type="text" id="code" placeholder="Ange kod" required>
+                            </div>
+                            <button class="btn btn-secondary" onclick="submitCode()">Mörda</button>
                         </div>
-                        <button class="btn btn-secondary" onclick="submitCode()">Mörda</button>
                     </div>
-                </div>
+                {% else %}
+                    <p>
+                        Det verkar som om du inte har tilldelats ett mål av systemet. Detta kan bero på en bugg så vänligen kontakta Movitz.
+                    </p>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6">

@@ -44,9 +44,9 @@ if($event['status'] == 3)
 $sql = '
 SELECT player.secret, player.alive, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
 FROM qr_players AS player 
-RIGHT JOIN qr_users AS target_user ON player.target = target_user.id
-LEFT JOIN qr_kills AS kills ON player.qr_users_id = kills.killer
-WHERE player.qr_users_id = ? AND player.qr_events_id = ?
+LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
+LEFT OUTER JOIN qr_kills AS kills ON player.qr_users_id = kills.killer
+WHERE player.qr_users_id = 1 AND player.qr_events_id = 13
 ';
 $player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
 $model['player'] = $player;
