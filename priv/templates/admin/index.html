@@ -8,7 +8,11 @@
     <form action="index.php" method="post">
         <div class="form-group">
             <label for="ga_track_id">Google track id</label>
-            <input class="form-control" type="text" name="ga_track_id" id="ga_track_id" value="{{ ga_track_id }}">
+            <input class="form-control" type="text" name="ga_track_id" id="ga_track_id" value="{{ config.ga_track_id }}">
+        </div>
+        <div class="form-group">
+            <label for="webhook">Discord webhook</label>
+            <input class="form-control" type="text" name="webhook" id="webhook" value="{{ config.webhook }}">
         </div>
         <button class="btn btn-secondary" type="submit">Spara</button>
     </form>

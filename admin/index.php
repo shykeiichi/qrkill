@@ -14,10 +14,11 @@ if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     $conf['ga_track_id'] = $_POST['ga_track_id'];
+    $conf['webhook'] = $_POST['webhook'];
     file_put_contents(__DIR__ . "/../priv/config.json", json_encode($conf));
     header('Location: index.php');
     die();
 }
 
-$model['ga_track_id'] = json_decode(file_get_contents(__DIR__ . "/../priv/config.json"), true)['ga_track_id'];
+$model['config'] = json_decode(file_get_contents(__DIR__ . "/../priv/config.json"), true);
 echo $twig->render('admin/index.html', $model);
