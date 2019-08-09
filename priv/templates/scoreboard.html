@@ -36,7 +36,7 @@
         </div>
         <script>
             var countDownDate = {{ date(event.end_date).timestamp * 1000 }};
-            const yeet = function() {
+            const updateCountdown = function() {
             
                 var now = new Date().getTime();
 
@@ -52,14 +52,13 @@
                 stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
                 document.getElementById("countdown").innerHTML = stringyboi + seconds + "s ";
                 if (distance < 1) {
-                clearInterval(x);
+                clearInterval(interval);
                 document.getElementById("countdown").innerHTML = "Avslutat!";
                 }
             }
 
-            yeet();
-
-            var x = setInterval(yeet, 1000);
+            updateCountdown();
+            var interval = setInterval(updateCountdown, 1000);
             
         </script>
                 

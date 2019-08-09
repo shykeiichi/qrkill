@@ -10,7 +10,7 @@
 
     <script>
         var countDownDate = {{ date(event.start_date).timestamp * 1000 }};
-        const yeet = function() {
+        const updateCountdown = function() {
         
             var now = new Date().getTime();
 
@@ -29,8 +29,8 @@
                 window.location = window.location;
             }
         }
-        yeet();
-        setInterval(yeet, 1000);
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
         
     </script>
 {% endblock jumbo %}

@@ -25,7 +25,7 @@
                         </p>
                         <div class="row">
                             <div class="col">   
-                                <input class="form-control" type="text" id="code" placeholder="Ange kod" required>
+                                <input class="form-control" type="text" id="code" placeholder="Ange kod" required autocomplete="off">
                             </div>
                             <button class="btn btn-secondary" onclick="submitCode()">Mörda</button>
                         </div>
@@ -46,7 +46,13 @@
                 Poäng: {{ player.score }}<br>
                 Kod: <span id="secret">{{ player.secret }}</span>
                 <hr class="my-4 bg-white">
-                <div id="qrcode" class="mt-4 row d-flex justify-content-center"></div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-auto pt-4 pb-4 pr-5 pl-5 bg-light">
+                        <div id="qrcode" class="row d-flex justify-content-center"></div>
+                    </div>
+                    <div class="col"></div>
+                </div>
                 {% if victims %}
                 <hr class="my-4 bg-white">
                     Dina offer:
