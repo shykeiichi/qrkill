@@ -1,6 +1,6 @@
 <?php
 
-$webhook = json_decode(file_get_contents(__DIR__ . '/config.json'), true)['webhook'];
+$config = json_decode(file_get_contents(__DIR__ . '/config.json'), true);
 
 function sendMessage($message)
 {
@@ -12,8 +12,8 @@ function sendMessage($message)
 		)
 	);
 	$context  = stream_context_create($options);
-	global $webhook;
-	$result = file_get_contents($webhook, false, $context);
+	global $config;
+	$result = file_get_contents($config['webhook'], false, $context);
 }
 
 function discordErrorHandler($errno, $errstr, $errfile, $errline) {
@@ -28,9 +28,9 @@ function discordExceptionHandler($exception) {
 	}
 }
 
-if(isset($webhook))
+if(isset($config['webhook']))
 {
 	set_error_handler("discordErrorHandler");
 	set_exception_handler("discordExceptionHandler");
-	#error_reporting(0);
+	error_reporting(0);
 }

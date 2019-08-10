@@ -34,13 +34,42 @@ if(!$bind)
 	die();
 }
 
-if(!$user)
+if(!isset($user['id']))
 {
-	echo $twig->render('login.html', ['error' => 'Du har inte registrerats i QRKill än. Kontakta Movitz om du borde vara det.']);
-	die();
+	$search = ldap_search($ldap, "OU=Elever,DC=ad,DC=ssis,DC=nu", "(cn=" . $_POST['username'] . ")", array("cn", "givenName", "sn", "memberOf")) or die('ldap_search failed');
+	$userInfo = ldap_get_entries($ldap, $search);
+	if($userInfo['count'] == 0)
+	{
+		echo $twig->render('login.html', ['error' => 'Kunde inte hitta dig i AD:t. Är du inte en elev? Kontakta Movitz om du vill ha tillgång.']);
+		die();
+	}
+	$userInfo = $userInfo[0];
+
+	$name = $userInfo['givenname'][0] . ' ' . $userInfo['sn'][0];
+	$username = $userInfo['cn'][0];
+	$class = 'Okänd klass';
+	
+	foreach ($userInfo['memberof'] as $value)
+	{
+		if(strpos($value, 'OU=Klass') !== false) 
+		{
+			$class = substr($value, 3, 5);
+			break;
+		}
+	}
+	
+	$sql = 'SELECT (COUNT(*) = 0) FROM qr_users';
+	$isAdmin = DB::prepare($sql)->execute()->fetchColumn();
+
+	$sql = 'INSERT INTO qr_users (username, name, class, is_admin) VALUES (?, ?, ?, ?)';
+	DB::prepare($sql)->execute([$username, $name, $class, $isAdmin]);
+
 }
 
-$sql = "INSERT INTO qr_logins (success, qr_users_id) VALUES (1, ?)";
+$sql = 'SELECT * FROM qr_users WHERE username = ?';# jag vet att det onödigt, men jag är lat
+$user = DB::prepare($sql)->execute([$_POST['username']])->fetch();
+
+$sql = "INSERT INTO qr_logins (success, qr_users_id) VALUES (1, ?)"; 
 DB::prepare($sql)->execute([$user['id']]);
 
 $_SESSION['qr']['id'] = $user['id'];

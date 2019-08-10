@@ -19,7 +19,7 @@ spl_autoload_register(function ($classname) {
 
 });
 
-$loader = new \Twig\Loader\FilesystemLoader('/home/18mosu/public_html/qr/priv/templates');
+$loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/templates');
 $twig = new \Twig\Environment($loader, [
     #'cache' => 'cache',
 ]);

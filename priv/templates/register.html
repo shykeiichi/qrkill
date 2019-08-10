@@ -1,7 +1,11 @@
 {% extends "info_base.html" %}
 
 {% block title %}
-    Nedräkning
+    {% if date() < date(event.start_date) %}
+        Nedräkning
+    {% else %}
+        Registrering
+    {% endif %}
 {% endblock title %}
 
 {% block jumbo %}
@@ -17,7 +21,7 @@
             <button class="btn btn-success" type="submit">Gå med!</button>
         </form>
     </div>
-    {% if date() > date(event.start_date) %}
+    {% if date() < date(event.start_date) %}
         <script>
             var countDownDate = {{ date(event.start_date).timestamp * 1000 }};
             const updateCountdown = function() {
@@ -36,7 +40,7 @@
                 stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
                 document.getElementById("countdown").innerHTML = stringyboi + seconds + "s";
                 if (distance < 1) {
-                    //window.location = window.location;
+                    window.location = window.location;
                 }
             }
             updateCountdown();

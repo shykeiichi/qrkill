@@ -39,38 +39,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         header('Location: users.php?id='.DB::lastInsertId());
         die();
     }
-
-    if($_POST['action'] === 'Importera alla användare')
-    {
-        $ldap = ldap_connect("ldaps://ad.ssis.nu") or die('ldap_connect failed');
-        $bind = ldap_bind($ldap, $_POST['username'] . "@ad.ssis.nu", $_POST['password']) or die('Fel lösenord eller användarnamn.');
-    
-        $search = ldap_search($ldap, "OU=Elever,DC=ad,DC=ssis,DC=nu", "(cn=*)", array("cn", "givenName", "sn", "memberOf")) or die('ldap_search failed');
-        $users = ldap_get_entries($ldap, $search) or die('ldap_get_entries failed');
-    
-        unset($users['count']);
-
-        foreach($users as $key => $user)
-        {
-            $name = $user['givenname'][0] . ' ' . $user['sn'][0];
-            $username = $user['cn'][0];
-            $class = 'Okänd klass';
-            
-            foreach ($user['memberof'] as $key => $value)
-            {
-                if(strpos($value, 'OU=Klass') !== false) 
-                {
-                    $class = substr($value, 3, 5);
-                    break;
-                }
-            }
-
-            $sql = 'INSERT INTO qr_users (username, name, class) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE class = ?';
-            DB::prepare($sql)->execute([$username, $name, $class, $class]);
-            
-        }
-        header('Location: users.php');
-        die();
-    }
 }
 

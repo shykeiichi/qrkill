@@ -74,8 +74,6 @@ if($info['killed'] === '1')
         DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
     }
 
-    
-
     echo json_encode(['code' => 3]); # SUCCESS
 }
 else

@@ -7,12 +7,12 @@ require_once 'priv/pdo.php';
 
 if(!isset($_SESSION['qr']['id']))
 {
-    header('Location: login.php');
+    header('Location: index.php');
     die();
 }
 
 $sql = "
-SELECT id, name, start_date, end_date,
+SELECT id, name, start_date, end_date, 
 CASE
     WHEN NOW() < start_date THEN 1
     WHEN NOW() > end_date THEN 2 
