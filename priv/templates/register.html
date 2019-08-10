@@ -1,0 +1,46 @@
+{% extends "info_base.html" %}
+
+{% block title %}
+    Nedräkning
+{% endblock title %}
+
+{% block jumbo %}
+    <h1>Anmäl dig till QRKill!</h1>
+
+    {% if date() < date(event.start_date) %}
+        <p>Nästa QRKill-event börjar om <span id="countdown"></span>!</p>
+    {% else %}
+        <p>QRKill har börjat, men du kan fortfarande gå med!</p>
+    {% endif %}
+    <div>
+        <form action="register.php" method="post">
+            <button class="btn btn-success" type="submit">Gå med!</button>
+        </form>
+    </div>
+    {% if date() > date(event.start_date) %}
+        <script>
+            var countDownDate = {{ date(event.start_date).timestamp * 1000 }};
+            const updateCountdown = function() {
+            
+                var now = new Date().getTime();
+    
+                var distance = countDownDate - now;
+            
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+                var stringyboi = days == 0 ? '' : days + "d ";
+                stringyboi += days == 0 && hours == 0 ? '' : hours + "h ";
+                stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
+                document.getElementById("countdown").innerHTML = stringyboi + seconds + "s";
+                if (distance < 1) {
+                    //window.location = window.location;
+                }
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        </script>
+    {% endif %}
+{% endblock jumbo %}

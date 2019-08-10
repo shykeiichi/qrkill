@@ -1,9 +1,9 @@
 <?php
 session_start();
 
+require_once 'priv/errorhandler.php';
 require_once 'priv/twig.php';
 require_once 'priv/pdo.php';
-require_once 'priv/errorhandler.php';
 
 if(!isset($_SESSION['qr']['id']))
 {
@@ -12,27 +12,40 @@ if(!isset($_SESSION['qr']['id']))
 }
 
 $sql = "
-SELECT event.id, event.name, event.start_date, event.end_date, player.feedback_given,
+SELECT id, name, start_date, end_date,
 CASE
-    WHEN NOW() < event.start_date THEN 1 -- The event is starting and a countdown is shown
-    WHEN NOW() > event.end_date THEN 2 -- The event is over and up for display
+    WHEN NOW() < start_date THEN 1
+    WHEN NOW() > end_date THEN 2 
+    WHEN NOW() > start_date AND NOW() < end_date THEN 3
 END AS status
-FROM qr_events AS event RIGHT JOIN qr_players AS player ON event.id = player.qr_events_id 
-WHERE player.qr_users_id = ? AND CURRENT_DATE < display_date LIMIT 1
+FROM qr_events AS event
+WHERE display_date > NOW() ORDER BY start_date DESC LIMIT 1
 ";
-$event = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetch();
+$event = DB::prepare($sql)->execute()->fetch();
 $model['event'] = $event;
 
 if(!$event)
 {
-    echo $twig->render('noevents.html');
+    echo $twig->render('noevent.html');
+    die();
+}
+$sql = "
+SELECT qr_users_id
+FROM qr_players as player
+WHERE qr_events_id = ? AND qr_users_id = ?
+";
+$player = DB::prepare($sql)->execute([$event['id'], $_SESSION['qr']['id']])->fetch();
+
+if(!$player)
+{
+    echo $twig->render('register.html', $model);
     die();
 }
 
-if($event['status'] == 1)
+if($event['status'] == 1 && $player) 
 {
     echo $twig->render('countdown.html', $model);
-    die();
+    die();    
 }
 
 if($event['status'] == 2)

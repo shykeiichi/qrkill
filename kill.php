@@ -2,8 +2,8 @@
 
 session_start();
 
-require_once 'priv/pdo.php';
 require_once 'priv/errorhandler.php';
+require_once 'priv/pdo.php';
 
 $secret = json_decode(file_get_contents('php://input'), true)['secret'];
 
@@ -44,13 +44,37 @@ if($info['killed'] === '1')
     $sql = 'INSERT INTO qr_kills (target, killer, qr_events_id) VALUES ((SELECT qr_users_id FROM qr_players WHERE secret = ?), ?, ?)';
     DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
 
-    $sql = '
-    UPDATE qr_players as q1 
-    JOIN (SELECT target FROM qr_players WHERE secret = ?) as q2 
-    SET q1.target = q2.target 
-    WHERE qr_users_id = ? AND qr_events_id = ?
-    ';
-    DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
+    $sql = "
+    SELECT qr_users_id
+    FROM qr_players
+    WHERE target IS NULL AND qr_events_id = ?
+    ORDER BY created_date ASC LIMIT 1
+    ";
+    $id = DB::prepare($sql)->execute([$info['id']])->fetchColumn();
+    
+    if($id)
+    {
+        $sql = '
+        UPDATE qr_players as killer
+        JOIN qr_players AS victim ON victim.secret = ?
+        JOIN qr_players AS new_player ON new_player.qr_users_id = ?
+        SET new_player.target = victim.target, killer.target = new_player.qr_users_id
+        WHERE killer.qr_users_id = ? AND killer.qr_events_id = ?
+        ';
+        DB::prepare($sql)->execute([$secret, $id, $_SESSION['qr']['id'], $info['id']]);
+    }
+    else
+    {
+        $sql = '
+        UPDATE qr_players as killer
+        JOIN (SELECT target FROM qr_players WHERE secret = ?) as victim
+        SET killer.target = victim.target 
+        WHERE qr_users_id = ? AND qr_events_id = ?
+        ';
+        DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
+    }
+
+    
 
     echo json_encode(['code' => 3]); # SUCCESS
 }

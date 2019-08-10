@@ -16,13 +16,21 @@ function sendMessage($message)
 	$result = file_get_contents($webhook, false, $context);
 }
 
+function discordErrorHandler($errno, $errstr, $errfile, $errline) {
+	sendMessage("Error: \r\n$errno on line $errline in $errfile\r\n$errstr");
+}
+
+function discordExceptionHandler($exception) {
+	while($exception)
+	{
+		sendMessage("Exception: \n\r " . $exception->getMessage() . "\r\n" . json_encode($exception->getTrace(), JSON_PRETTY_PRINT) ."\n\rIn " . $exception->getFile() . " on line " . $exception->getLine());
+		$exception = $exception->getPrevious();
+	}
+}
+
 if(isset($webhook))
 {
-	set_error_handler(function ($exception) {
-		sendMessage("Exception: \n\r $exception");
-	});
-	set_exception_handler(function ($errno, $errstr, $errfile, $errline) {
-		sendMessage("Error: \r\n$errno on line $errline in $errfile\r\n$errstr");
-	});
-	error_reporting(0);
+	set_error_handler("discordErrorHandler");
+	set_exception_handler("discordExceptionHandler");
+	#error_reporting(0);
 }
