@@ -21,7 +21,7 @@ spl_autoload_register(function ($classname) {
 
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/templates');
 $twig = new \Twig\Environment($loader, [
-    #'cache' => 'cache',
+    'cache' => 'priv/cache',
 ]);
 $twig->addGlobal('session', $_SESSION);
 

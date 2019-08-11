@@ -12,7 +12,7 @@ if(!isset($_SESSION['qr']['id']))
 }
 
 $sql = "
-SELECT id, name, start_date, end_date, 
+SELECT id, name, start_date, end_date, (end_date - NOW()) AS time_left,
 CASE
     WHEN NOW() < start_date THEN 1
     WHEN NOW() > end_date THEN 2 
@@ -26,19 +26,28 @@ $model['event'] = $event;
 
 if(!$event)
 {
-    echo $twig->render('noevent.html');
+    echo $twig->render('noevents.html');
     die();
 }
+
 $sql = "
-SELECT qr_users_id
+SELECT qr_users_id, feedback_given
 FROM qr_players as player
 WHERE qr_events_id = ? AND qr_users_id = ?
 ";
 $player = DB::prepare($sql)->execute([$event['id'], $_SESSION['qr']['id']])->fetch();
+$model['feedback_given'] = $player['feedback_given'];
 
 if(!$player)
 {
-    echo $twig->render('register.html', $model);
+    if($event['time_left'] > 1000000)
+    {
+        echo $twig->render('register.html', $model);
+    }
+    else
+    {
+        echo $twig->render('noevents.html', $model);
+    }
     die();
 }
 
@@ -46,6 +55,12 @@ if($event['status'] == 1 && $player)
 {
     echo $twig->render('countdown.html', $model);
     die();    
+}
+
+if($event['status'] == 2)
+{
+    echo $twig->render('eventover.html', $model);
+    die();
 }
 
 $sql = '
@@ -57,12 +72,6 @@ WHERE player.qr_users_id = ? AND player.qr_events_id = ?
 ';
 $player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
 $model['player'] = $player;
-
-if($event['status'] == 2)
-{
-    echo $twig->render('eventover.html', $model);
-    die();
-}
 
 if($player['alive'] == 0)
 {
