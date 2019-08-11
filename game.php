@@ -48,14 +48,8 @@ if($event['status'] == 1 && $player)
     die();    
 }
 
-if($event['status'] == 2)
-{
-    echo $twig->render('eventover.html', $model);
-    die();
-}
-
 $sql = '
-SELECT player.qr_users_id, player.secret, player.alive, player.target, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
+SELECT player.qr_users_id, player.feedback_given, player.secret, player.alive, player.target, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
 FROM qr_players AS player 
 LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
 LEFT OUTER JOIN qr_kills AS kills ON player.qr_users_id = kills.killer AND player.qr_events_id = kills.qr_events_id
@@ -63,6 +57,12 @@ WHERE player.qr_users_id = ? AND player.qr_events_id = ?
 ';
 $player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
 $model['player'] = $player;
+
+if($event['status'] == 2)
+{
+    echo $twig->render('eventover.html', $model);
+    die();
+}
 
 if($player['alive'] == 0)
 {

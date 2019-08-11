@@ -9,7 +9,7 @@ require_once 'priv/errorhandler.php';
 $sql = '
 SELECT *
 FROM qr_events
-WHERE start_date < CURRENT_DATE AND display_date > CURRENT_DATE LIMIT 1
+WHERE display_date > CURRENT_DATE LIMIT 1
 ';
 $event =  DB::prepare($sql)->execute()->fetch();
 $model['event'] = $event;

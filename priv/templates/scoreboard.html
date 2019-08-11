@@ -23,71 +23,104 @@
 
 {% block content %}
     <div class="jumbotron bg-dark">
-            {% if not event %}
+        {% if not event %}
             <h1>
                 Det finns inget spel att visa poängtavla för!
             </h1>
         {% else %}
-        <div class="d-flex justify-content-center">
-            <h1>QRKill - {{ event.name }}</h1><br>
-        </div>
-        <div class="d-flex justify-content-center">
-            <h3 id="countdown">Avslutas {{ event.end_date }}</h3>
-        </div>
-        <script>
-            var countDownDate = {{ date(event.end_date).timestamp * 1000 }};
-            const updateCountdown = function() {
-            
-                var now = new Date().getTime();
-
-                var distance = countDownDate - now;
-            
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-                var stringyboi = days == 0 ? '' : days + "d ";
-                stringyboi += days == 0 && hours == 0 ? '' : hours + "h ";
-                stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
-                document.getElementById("countdown").innerHTML = stringyboi + seconds + "s ";
-                if (distance < 1) {
-                clearInterval(interval);
-                document.getElementById("countdown").innerHTML = "Avslutat!";
-                }
-            }
-
-            updateCountdown();
-            var interval = setInterval(updateCountdown, 1000);
-            
-        </script>
+            <div class="d-flex justify-content-center">
+                <h1>QRKill - {{ event.name }}</h1><br>
+            </div>
+            {% if date() < date(event.start_date) %}
+                <center><h3>Börjar om <span id="countdown"></span>!</h3></center>
+                <script>
+                    var countDownDate = {{ date(event.start_date).timestamp * 1000 }};
+                    const updateCountdown = function() {
                 
-            <table class="table table-striped table-dark">
-                <thead>
-                    <tr>
-                        <th>Namn</th>
-                        <th>Klass</th>
-                        <th>Poäng</th>
-                        <th>I livet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if not users %}
+                        var now = new Date().getTime();
+    
+                        var distance = countDownDate - now;
+                        if (distance < 1) {
+                            clearInterval(interval);
+                            window.location = window.location
+                            return;
+                        }
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                        var stringyboi = days == 0 ? '' : days + "d ";
+                        stringyboi += days == 0 && hours == 0 ? '' : hours + "h ";
+                        stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
+                        document.getElementById("countdown").innerHTML = stringyboi + seconds + "s ";
+                        
+                    }
+    
+                    updateCountdown();
+                    var interval = setInterval(updateCountdown, 1000);
+                    
+                </script>
+            {% else %}
+                <div class="d-flex justify-content-center">
+                    <h3 id="countdown">Avslutas {{ event.end_date }}</h3>
+                </div>
+
+                <script>
+                    var countDownDate = {{ date(event.end_date).timestamp * 1000 }};
+                    const updateCountdown = function() {
+                
+                        var now = new Date().getTime();
+    
+                        var distance = countDownDate - now;
+                        
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                        var stringyboi = days == 0 ? '' : days + "d ";
+                        stringyboi += days == 0 && hours == 0 ? '' : hours + "h ";
+                        stringyboi += days == 0 && hours == 0 && minutes == 0 ? '' : minutes + "m "
+                        document.getElementById("countdown").innerHTML = stringyboi + seconds + "s ";
+                        if (distance < 1) {
+                            document.getElementById("countdown").innerHTML = "Avslutat!";
+                            clearInterval(interval);
+                        }
+                    }
+    
+                    updateCountdown();
+                    var interval = setInterval(updateCountdown, 1000);
+                    
+                </script>
+                    
+                <table class="table table-striped table-dark">
+                    <thead>
                         <tr>
-                            <td colspan="4"><center>Ingen har blivit mördad än ) :</center></td>
+                            <th>Namn</th>
+                            <th>Klass</th>
+                            <th>Poäng</th>
+                            <th>I livet</th>
                         </tr>
-                    {% else %}
-                        {% for user in users %}
+                    </thead>
+                    <tbody>
+                        {% if not users %}
                             <tr>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.class }}</td>
-                                <td>{{ user.score }}</td>
-                                <td>{{ user.alive == '1' ? 'Ja' : 'Nej' }}</td>
+                                <td colspan="4"><center>Ingen har blivit mördad än ) :</center></td>
                             </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+                        {% else %}
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.class }}</td>
+                                    <td>{{ user.score }}</td>
+                                    <td>{{ user.alive == '1' ? 'Ja' : 'Nej' }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock content %}
