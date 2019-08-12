@@ -1,7 +1,7 @@
 <?php
 
-require_once 'priv/pdo.php';
 require_once 'priv/errorhandler.php';
+require_once 'priv/pdo.php';
 
 session_start();
 
