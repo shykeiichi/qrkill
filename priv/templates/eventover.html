@@ -5,31 +5,5 @@
     <p>Tack för att du deltog i vårat killer game! Vi hoppas att du tyckte att det var kul.</p>
     <p>Om du vill se hur det gick så kan du kolla på <a href="scoreboard.php">poängtavlan</a>.</p>
     <hr class="bg-white">
-    <h4>Feedback</h4>
-    {% if not feedback_given %}
-        <p>
-            Om du har tid får du gärna ge oss lite feedback. Det är såklart anonymt och du behöver bara skriva så mycket du vill.
-        </p>
-        <form action="feedback.php" method="POST">
-            <div class="form-group">
-                
-                <label for="rate">På en skala från ett till fyra, hur mycket skulle du vilja spela QRKill nästa år?</label>
-                <p id="rateDisplay">4</p>
-                <input class="custom-range" oninput="yeet()" type="range" value="4" max="4" min="1" name="rate" id="feedbackRate">
-                <script>
-                    function yeet() {
-                        document.getElementById('rateDisplay').innerText = document.getElementById('feedbackRate').value
-                    }
-                </script>
-            </div>
-            <div class="form-group">
-                <textarea class="form-control" name="feedback" id="feedback" cols="20" maxlength="300" rows="5" placeholder="Eventuella kommentarer"></textarea>
-            </div>
-            <button class="btn btn-secondary" type="submit">Skicka feedback</button>
-        </form>
-    {% else %}
-        <p>
-            Tack för din feedback!
-        </p>
-    {% endif %}
+    {% include "feedback.html" %}
 {% endblock jumbo %}

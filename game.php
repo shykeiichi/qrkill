@@ -14,9 +14,8 @@ if(!isset($_SESSION['qr']['id']))
 $sql = "
 SELECT id, name, start_date, end_date, (end_date - NOW()) AS time_left,
 CASE
-    WHEN NOW() < start_date THEN 1
-    WHEN NOW() > end_date THEN 2 
-    WHEN NOW() > start_date AND NOW() < end_date THEN 3
+    WHEN NOW() < start_date THEN 1 -- The event hasen't started yet
+    WHEN NOW() > end_date THEN 2  -- The event has ended
 END AS status
 FROM qr_events AS event
 WHERE display_date > NOW() ORDER BY start_date DESC LIMIT 1
@@ -30,13 +29,14 @@ if(!$event)
     die();
 }
 
-$sql = "
-SELECT qr_users_id, feedback_given
-FROM qr_players as player
-WHERE qr_events_id = ? AND qr_users_id = ?
-";
-$player = DB::prepare($sql)->execute([$event['id'], $_SESSION['qr']['id']])->fetch();
-$model['feedback_given'] = $player['feedback_given'];
+$sql = '
+SELECT player.secret, player.target, player.feedback_given, player.alive, target_user.name AS target_name, target_user.class AS target_class
+FROM qr_players AS player 
+LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
+WHERE player.qr_users_id = ? AND player.qr_events_id = ?
+';
+$player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
+$model['player'] = $player;
 
 if(!$player)
 {
@@ -51,7 +51,7 @@ if(!$player)
     die();
 }
 
-if($event['status'] == 1 && $player) 
+if($event['status'] == 1) 
 {
     echo $twig->render('countdown.html', $model);
     die();    
@@ -63,33 +63,23 @@ if($event['status'] == 2)
     die();
 }
 
-$sql = '
-SELECT player.qr_users_id, player.feedback_given, player.secret, player.alive, player.target, target_user.name AS target_name, target_user.class AS target_class, COUNT(kills.id) AS score
-FROM qr_players AS player 
-LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
-LEFT OUTER JOIN qr_kills AS kills ON player.qr_users_id = kills.killer AND player.qr_events_id = kills.qr_events_id
-WHERE player.qr_users_id = ? AND player.qr_events_id = ?
-';
-$player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
-$model['player'] = $player;
-
 if($player['alive'] == 0)
 {
-    echo $twig->render('dead.html');
+    echo $twig->render('dead.html', $model);
     die();
 }
 
-if($player['qr_users_id'] == $player['target'])
+if($_SESSION['qr']['id'] == $player['target'])
 {
     echo $twig->render('win.html', $model);
     die();
 }
 
 $sql = '
-SELECT victim.name, victim.class, qr_kills.created_date
-FROM qr_kills 
-RIGHT JOIN qr_users AS victim ON qr_kills.target = victim.id
-WHERE qr_kills.killer = ? AND qr_kills.qr_events_id = ?
+SELECT victim.name, victim.class, kills.created_date
+FROM qr_kills AS kills
+RIGHT JOIN qr_users AS victim ON kills.target = victim.id
+WHERE kills.killer = ? AND kills.qr_events_id = ?
 ';
 $model['victims'] = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetchAll();
 

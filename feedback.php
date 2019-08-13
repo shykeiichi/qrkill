@@ -23,13 +23,14 @@ if(
 }
 
 $sql = "
-SELECT qr_events.id, qr_players.feedback_given
-FROM qr_events RIGHT JOIN qr_players ON qr_events.id = qr_players.qr_events_id 
-WHERE qr_players.qr_users_id = ? AND CURRENT_DATE < display_date 
+SELECT event.id, player.feedback_given
+FROM qr_events AS event 
+RIGHT JOIN qr_players AS player ON event.id = player.qr_events_id 
+WHERE player.qr_users_id = ? AND NOW() < display_date AND NOW() > start_date
 ";
 $event = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetch();
 
-if($event['feedback_given'] == '1')
+if($event['feedback_given'] == 1)
 {
     die();
 }

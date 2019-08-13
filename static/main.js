@@ -33,7 +33,7 @@ function handleKill(resp) {
     if(resp.error != null) {
         document.getElementById('errorMessage').innerText = resp.error;
         $('#failModal').modal();
-    } else if(resp.code === 3) {
+    } else if(resp.success === true) {
         $('#killModal').modal();
     }
 }

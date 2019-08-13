@@ -1,21 +1,19 @@
 {% extends "base.html" %}
 
-
 {% block title %}Poängtavla{% endblock title %}
 
 {% block header %}
     <div class="row p-4">
         <div class="col">
-            <h1 class="">QRKill</h1>
+            <h1><a class="nav-link text-light" href="index.php">QRKill</a></h1>
         </div>
         <div class="col">
-            
             {% if session.qr.id %}
-                <a class="btn btn-dark float-right ml-1" href="logout.php">Logga ut</a>
+                <a class="btn btn-dark float-right ml-1 mt-1" href="logout.php">Logga ut</a>
             {% endif %}
-            <a class="btn btn-dark float-right ml-1" href="game.php">Spel</a>
+            <a class="btn btn-dark float-right ml-1 mt-1" href="game.php">Spel</a>
             {% if session.qr.is_admin == '1'%}
-                <a class="btn btn-danger float-right" href="admin">Admin</a>
+                <a class="btn btn-danger float-right mt-1" href="admin">Admin</a>
             {% endif %}
         </div>
     </div>
