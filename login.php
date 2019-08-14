@@ -2,6 +2,7 @@
 
 session_start();
 
+require_once 'priv/errorhandler.php';
 require_once 'priv/pdo.php';
 require_once 'priv/twig.php';
 
@@ -34,7 +35,6 @@ if(!$bind)
 	}
 	die();
 }
-
 
 if($user)
 {
@@ -77,7 +77,7 @@ $sql = 'SELECT (COUNT(*) = 0) FROM qr_users';
 $isAdmin = DB::prepare($sql)->execute()->fetchColumn();
 
 $sql = 'INSERT INTO qr_users (username, name, class, is_admin) VALUES (?, ?, ?, ?)';
-DB::prepare($sql)->execute([$username, $name, $class, $isAdmin]);
+DB::prepare($sql)->execute([$_POST['username'], $name, $class, $isAdmin]);
 
 $userId = DB::lastInsertId();
 $_SESSION['qr']['id'] = $userId;
