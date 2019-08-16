@@ -12,10 +12,11 @@ if(!isset($_SESSION['qr']['id']))
 }
 
 $sql = "
-SELECT id, name, start_date, end_date, (end_date - NOW()) AS time_left,
+SELECT id, name, start_date, end_date, DATEDIFF(end_date, NOW()) AS days_left,
 CASE
     WHEN NOW() < start_date THEN 1 -- The event hasen't started yet
     WHEN NOW() > end_date THEN 2  -- The event has ended
+    WHEN NOW() < end_date AND NOW() > start_date THEN 3 -- The event is ongoing
 END AS status
 FROM qr_events AS event
 WHERE display_date > NOW() ORDER BY start_date DESC LIMIT 1
@@ -40,13 +41,13 @@ $model['player'] = $player;
 
 if(!$player)
 {
-    if($event['time_left'] > 1000000)
+    if($event['days_left'] < 3 && $event['status'] == 3)
     {
-        echo $twig->render('register.html', $model);
+        echo $twig->render('noevents.html', $model);
     }
     else
     {
-        echo $twig->render('noevents.html', $model);
+        echo $twig->render('register.html', $model);
     }
     die();
 }

@@ -15,9 +15,15 @@ $event =  DB::prepare($sql)->execute()->fetch();
 $model['event'] = $event;
 
 $sql = '
-SELECT COUNT(qr_kills.id) AS score, alive, qr_users.name, qr_users.class 
-FROM qr_players JOIN qr_kills JOIN qr_users ON qr_kills.killer = qr_users.id = qr_players.qr_users_id AND qr_kills.qr_events_id = qr_players.qr_events_id
-WHERE qr_players.qr_events_id = ? 
+SELECT 
+	SUM(1) AS score, alive, qr_users.name, qr_users.class
+FROM qr_kills 
+JOIN qr_users 
+JOIN qr_players
+	ON qr_kills.qr_events_id = qr_players.qr_events_id 
+    	AND qr_kills.killer = qr_users.id = qr_players.qr_users_id
+WHERE qr_players.qr_events_id = ?
+GROUP BY qr_kills.killer
 ';
 $users = DB::prepare($sql)->execute([$event['id']])->fetchAll();
 $model['users'] = $users;

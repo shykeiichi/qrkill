@@ -38,14 +38,14 @@
                     {{ error }}
                 </div>
             {% endif %}
-            <h4>Importera</h4>
+            <h4>Importera användare. OBS: debug</h4>
             <form action="events.php" method="POST">
                 <div class="form-group">
-                    <label for="">Vitlista. Kommaseparerade klasser. Lämna fältet tomt om du vill inkludera alla elever.</label>
+                    <label for="">Kommaseparerade klasser. Lämna fältet tomt om du vill inkludera alla elever.</label>
                     <input class="form-control" name="whitelist" type="text" placeholder="Ange klasser" autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label for="">Vitlista för elever. CSV igen.</label>
+                    <label for="">Kommaseparerade användarnamn.</label>
                     <input class="form-control" name="whitelistStudents" type="text" placeholder="Ange elever" autocomplete="off">
                 </div>
                 <input type="hidden" name="id" value="{{ event.id }}">
@@ -79,7 +79,6 @@
                         <td>{{ user.class }}</td>
                         <td>{{ user.secret }}</td>
                         {% if user.target != 0 %}
-                            
                             <td>{{ userMap[user.target] }} ({{ user.target }})</td>
                         {% else %}
                             <td><p class="badge badge-danger">Odefinerat</p></td>

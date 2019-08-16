@@ -34,7 +34,7 @@ $sql = '
 SELECT qr_events.id, qr_players.alive, (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) AS right_target 
 FROM qr_events
 RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id 
-WHERE qr_players.qr_users_id = ? AND CURRENT_DATE < end_date AND CURRENT_DATE > start_date
+WHERE qr_players.qr_users_id = ? AND NOW() < end_date AND NOW() > start_date
 ';
 $info =  DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']])->fetch();
 

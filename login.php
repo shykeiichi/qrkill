@@ -48,7 +48,6 @@ if($user)
 	$_SESSION['qr']['class'] = $user['class'];
 
 	header('Location: index.php');
-
 	die();
 }
 
