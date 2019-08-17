@@ -28,7 +28,7 @@ function discordExceptionHandler($exception) {
 	}
 }
 
-if(isset($config['webhook']))
+if(isset($config['webhook']) && $config['webhook'] != '')
 {
 	set_error_handler("discordErrorHandler");
 	set_exception_handler("discordExceptionHandler");
