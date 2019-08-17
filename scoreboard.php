@@ -14,23 +14,23 @@ WHERE display_date > CURRENT_DATE LIMIT 1
 $event =  DB::prepare($sql)->execute()->fetch();
 $model['event'] = $event;
 
-$sql = '
-SELECT 
-	SUM(1) AS score, alive, qr_users.name, qr_users.class
-FROM qr_kills 
-JOIN qr_users 
-JOIN qr_players
-	ON qr_kills.qr_events_id = qr_players.qr_events_id 
-    	AND qr_kills.killer = qr_users.id = qr_players.qr_users_id
-WHERE qr_players.qr_events_id = ?
-GROUP BY qr_kills.killer
-';
-$users = DB::prepare($sql)->execute([$event['id']])->fetchAll();
-$model['users'] = $users;
-
-if($users[0]['name'] === NULL)
+if($event)
 {
-    unset($model['users'][0]);
+	$sql = '
+	SELECT 
+		SUM(1) AS score,
+		qr_users.name,
+		qr_players.alive,
+		qr_users.class
+	FROM qr_players
+	JOIN qr_kills ON qr_kills.killer = qr_players.qr_users_id
+	JOIN qr_users ON qr_players.qr_users_id = qr_users.id
+	WHERE qr_players.qr_events_id = 21
+	GROUP BY qr_kills.killer
+	ORDER BY score DESC, alive DESC
+	';
+	$users = DB::prepare($sql)->execute([$event['id']])->fetchAll();
+	$model['users'] = $users;
 }
 
 echo $twig->render('scoreboard.html', $model);

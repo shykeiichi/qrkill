@@ -1,6 +1,6 @@
 <?php
 
-$config = json_decode(file_get_contents(__DIR__ . '/config.json'), true);
+$config = json_decode(file_get_contents(__DIR__ . '/config.json'), true, 512, JSON_OBJECT_AS_ARRAY);
 
 function sendMessage($message)
 {
@@ -13,6 +13,7 @@ function sendMessage($message)
 	);
 	$context  = stream_context_create($options);
 	global $config;
+	$config = (array) $config;
 	$result = file_get_contents($config['webhook'], false, $context);
 }
 
