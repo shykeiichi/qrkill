@@ -31,22 +31,34 @@ if($alive != 1)
 }
 
 $sql = '
-SELECT qr_events.id, qr_players.alive, (qr_players.target = (SELECT qr_users_id FROM qr_players WHERE secret = ?)) AS right_target 
-FROM qr_events
-RIGHT JOIN qr_players on qr_events.id = qr_players.qr_events_id 
-WHERE qr_players.qr_users_id = ? AND NOW() < end_date AND NOW() > start_date
+SELECT 
+    event.id,
+    target.alive,
+    (
+        target.qr_users_id = (
+            SELECT target 
+            FROM qr_players AS hunter 
+            WHERE hunter.qr_users_id = ? AND hunter.qr_events_id = event.id
+        )
+    ) AS correct_secret
+FROM qr_players AS target
+JOIN qr_events AS event
+	ON event.id = target.qr_events_id 
+    	AND NOW() > event.start_date 
+        AND NOW() < event.end_date
+WHERE target.secret = ?
 ';
-$info =  DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id']])->fetch();
+$info =  DB::prepare($sql)->execute([$_SESSION['qr']['id'], $secret])->fetch();
+
+if(!$info || $info['correct_secret'] == 0)
+{
+    echo json_encode(['error' => 'Koden du angav var inte korrekt']);
+    die();
+}
 
 if($info['alive'] == 0)
 {
     echo json_encode(['error' => 'Denna person är redan död. Ta det lungt.']);
-    die();
-}
-
-if($info['right_target'] == 0)
-{
-    echo json_encode(['error' => 'Koden du angav var inte korrekt']);
     die();
 }
 
