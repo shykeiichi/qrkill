@@ -12,7 +12,7 @@
     <h1>Anmäl dig till QRKill!</h1>
 
     {% if date() < date(event.start_date) %}
-        <p>Nästa QRKill-event börjar om <span id="countdown"></span>!</p>
+        <p>Nästa QRKill börjar om <span id="countdown"></span>!</p>
     {% else %}
         <p>QRKill har börjat, men du kan fortfarande gå med!</p>
     {% endif %}

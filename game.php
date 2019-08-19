@@ -33,7 +33,7 @@ WHERE display_date > NOW() ORDER BY start_date DESC LIMIT 1
 $event = DB::prepare($sql)->execute()->fetch();
 $model['event'] = $event;
 
-if(!$event)
+if(!isset($event['id']))
 {
     echo $twig->render('noevents.html');
     die();

@@ -25,7 +25,7 @@ if($event)
 	FROM qr_players
 	JOIN qr_kills ON qr_kills.killer = qr_players.qr_users_id
 	JOIN qr_users ON qr_players.qr_users_id = qr_users.id
-	WHERE qr_players.qr_events_id = 21
+	WHERE qr_players.qr_events_id = ?
 	GROUP BY qr_kills.killer
 	ORDER BY score DESC, alive DESC
 	';
