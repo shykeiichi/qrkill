@@ -5,7 +5,7 @@
 {% block header %}
     <div class="row p-4">
         <div class="col">
-            <h1><a class="nav-link text-light" href="index.php">QRKill</a></h1>
+            <h1><a class="nav-link text-light" href="index.php">QRTag</a></h1>
         </div>
         <div class="col">
             {% if session.qr.id %}
@@ -23,11 +23,11 @@
     <div class="jumbotron bg-dark">
         {% if not event %}
             <h1>
-                Det finns inget QRKill för tillfället.
+                Det finns inget QRTag för tillfället.
             </h1>
         {% else %}
             <div class="d-flex justify-content-center">
-                <h1>QRKill - {{ event.name }}</h1><br>
+                <h1>QRTag - {{ event.name }}</h1><br>
             </div>
             {% if date() < date(event.start_date) %}
                 <center><h3>Börjar om <span id="countdown"></span>!</h3></center>
@@ -104,7 +104,7 @@
                     <tbody>
                         {% if not users %}
                             <tr>
-                                <td colspan="4"><center>Ingen har blivit mördad än ) :</center></td>
+                                <td colspan="4"><center>Ingen har blivit taggad än ) :</center></td>
                             </tr>
                         {% else %}
                             {% for user in users %}

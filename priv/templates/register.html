@@ -9,12 +9,12 @@
 {% endblock title %}
 
 {% block jumbo %}
-    <h1>Anmäl dig till QRKill!</h1>
+    <h1>Anmäl dig till QRTag!</h1>
 
     {% if date() < date(event.start_date) %}
-        <p>Nästa QRKill börjar om <span id="countdown"></span>!</p>
+        <p>Nästa QRTag börjar om <span id="countdown"></span>!</p>
     {% else %}
-        <p>QRKill har börjat, men du kan fortfarande gå med!</p>
+        <p>QRTag har börjat, men du kan fortfarande gå med!</p>
     {% endif %}
     <div>
         <form action="register.php" method="post">

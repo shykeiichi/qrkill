@@ -27,12 +27,12 @@
                             <div class="col">   
                                 <input class="form-control" type="text" id="code" placeholder="Ange kod" required autocomplete="off" autofocus>
                             </div>
-                            <button class="btn btn-secondary" onclick="submitCode()">Mörda</button>
+                            <button class="btn btn-secondary" onclick="submitCode()">Tagga</button>
                         </div>
                     </div>
                 {% else %}
                     <p>
-                        Du har inte tilldelats ett mål eftersom du gick med efter att QRKill började. Du kommer att automatiskt tilldelas ett mål när någon annan mördas.
+                        Du har inte tilldelats ett mål eftersom du gick med efter att QRTag började. Du kommer att automatiskt tilldelas ett mål när någon annan går ur spelet.
                     </p>
                 {% endif %}
             </div>
@@ -55,7 +55,7 @@
                 </div>
                 {% if victims %}
                     <hr class="my-4 bg-white">
-                    Dina offer:
+                    Dina tidigare mål:
                     <table class="table table-dark">
                         <tbody>
                             {% for victim in victims %}
@@ -82,7 +82,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Du dödade ditt mål! Du kommer nu tilldelas ett nytt. Lycka till!</p>
+                    <p>Du taggade ditt mål! Du kommer nu tilldelas ett nytt. Lycka till!</p>
                 </div>
                 <div class="modal-footer">
                     <button onClick="window.location.reload();" type="button" class="btn btn-secondary" data-dismiss="modal">Stäng</button>

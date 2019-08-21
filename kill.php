@@ -26,7 +26,7 @@ $alive = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetchColumn();
 
 if($alive != 1)
 {
-    echo json_encode(['error' => 'Du är tyvärr död och kan inte mörda någon.']);
+    echo json_encode(['error' => 'Du är tyvärr ute ur spelet.']);
     die();
 }
 
@@ -58,7 +58,7 @@ if(!$info || $info['correct_secret'] == 0)
 
 if($info['alive'] == 0)
 {
-    echo json_encode(['error' => 'Denna person är redan död. Ta det lungt.']);
+    echo json_encode(['error' => 'Denna person är ute ur spelet.']);
     die();
 }
 
