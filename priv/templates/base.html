@@ -36,6 +36,8 @@
                 <div class="col">
                     {% if session.qr.id %}
                         <a class="btn btn-dark float-right ml-1 mt-1" href="logout.php">Logga ut</a>
+                    {% else %}
+                        <a class="btn btn-dark float-right ml-1 mt-1 d-block d-md-none" href="#login">Logga in</a>
                     {% endif %}
                     <a class="btn btn-dark float-right ml-1 mt-1" href="scoreboard.php">Poängtavla</a>
                     {% if session.qr.is_admin == '1'%}
