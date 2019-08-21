@@ -20,5 +20,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     die();
 }
 
+$model['database'] = DB::query('select database()')->fetchColumn();
 $model['config'] = json_decode(file_get_contents(__DIR__ . "/../priv/config.json"), true);
 echo $twig->render('admin/index.html', $model);
