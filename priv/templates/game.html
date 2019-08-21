@@ -18,7 +18,12 @@
                     Efternamn: {{ player.target_name|split(' ', 2)[1] }}<br>
                     Klass: {{ player.target_class }}<br>
                     <hr class="my-4 bg-white">
-                    <video class="embed-responsive" id="preview" hidden></video>
+                    <div id="auto" hidden>
+                        <video class="embed-responsive" id="preview"></video>
+                        <p>
+                            Om kameran är opraktiskt eller om skannern inte fungerar kan du inavaktivera kameran.
+                        </p>
+                    </div>
                     <div id="manual" hidden>
                         <p>
                             Din webbläsare har inte stöd för att skanna QR-koder. Vänligen ange koden manuellt istället.

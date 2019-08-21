@@ -70,7 +70,7 @@ $model['player'] = $player;
 
 if(!$player)
 {
-    if($event['days_left'] < 3 && $event['status'] == 3 || $event['someone_has_won'] == 1)
+    if($event['days_left'] < 4 && $event['status'] == 3 || $event['someone_has_won'] == 1)
     {
         echo $twig->render('noevents.html', $model);
     }
