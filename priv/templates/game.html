@@ -77,35 +77,16 @@
         </div>
     </div> 
 
-    <div class="modal text-dark" id="killModal" tabindex="-1" role="dialog">
+    <div class="modal text-dark" id="qrtag-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Grattis!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Du taggade ditt mål! Du kommer nu tilldelas ett nytt. Lycka till!</p>
-                </div>
-                <div class="modal-footer">
-                    <button onClick="window.location.reload();" type="button" class="btn btn-secondary" data-dismiss="modal">Stäng</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal text-dark" id="failModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Hmmm...</h5>
+                    <h5 id="modal-title" class="modal-title"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div id="errorMessage" class="modal-body">
+                <div id="modal-message" class="modal-body">
                 </div>
                 <div class="modal-footer">
                     <button onClick="window.location.reload();" type="button" class="btn btn-secondary" data-dismiss="modal">Stäng</button>

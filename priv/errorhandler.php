@@ -6,7 +6,7 @@ function sendMessage($message)
 {
 	$options = array(
 		'http' => array(
-			'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+			'header'  => "Content-type: application/x-www-form-urlencoded",
 			'method'  => 'POST',
 			'content' => http_build_query(array('content' => $message))
 		)
@@ -14,7 +14,7 @@ function sendMessage($message)
 	$context  = stream_context_create($options);
 	global $config;
 	$config = (array) $config;
-	$result = file_get_contents($config['webhook'], false, $context);
+	$result = file_get_contents($config['debug_webhook'], false, $context);
 }
 
 function discordErrorHandler($errno, $errstr, $errfile, $errline) {
@@ -29,7 +29,7 @@ function discordExceptionHandler($exception) {
 	}
 }
 
-if(isset($config['webhook']) && $config['webhook'] != '')
+if(isset($config['debug_webhook']) && $config['debug_webhook'] != '')
 {
 	set_error_handler("discordErrorHandler");
 	set_exception_handler("discordExceptionHandler");

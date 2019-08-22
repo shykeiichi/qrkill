@@ -34,6 +34,7 @@ $sql = '
 SELECT 
     event.id,
     target.alive,
+    user.name,
     (
         target.qr_users_id = (
             SELECT target 
@@ -43,9 +44,11 @@ SELECT
     ) AS correct_secret
 FROM qr_players AS target
 JOIN qr_events AS event
+JOIN qr_users AS user 
 	ON event.id = target.qr_events_id 
     	AND NOW() > event.start_date 
         AND NOW() < event.end_date
+        AND target.qr_users_id = user.id
 WHERE target.secret = ?
 ';
 $info =  DB::prepare($sql)->execute([$_SESSION['qr']['id'], $secret])->fetch();
@@ -77,9 +80,9 @@ FROM qr_players
 WHERE target IS NULL AND qr_events_id = ?
 ORDER BY created_date ASC LIMIT 1
 ";
-$player_without_target = DB::prepare($sql)->execute([$info['id']])->fetchColumn();
+$playerWithoutTarget = DB::prepare($sql)->execute([$info['id']])->fetchColumn();
 
-if($player_without_target)
+if($playerWithoutTarget)
 {
     $sql = '
     UPDATE qr_players as killer
@@ -88,7 +91,7 @@ if($player_without_target)
     SET new_player.target = victim.target, killer.target = new_player.qr_users_id
     WHERE killer.qr_users_id = ? AND killer.qr_events_id = ?
     ';
-    DB::prepare($sql)->execute([$secret, $player_without_target, $_SESSION['qr']['id'], $info['id']]);
+    DB::prepare($sql)->execute([$secret, $playerWithoutTarget, $_SESSION['qr']['id'], $info['id']]);
 }
 else
 {
@@ -101,4 +104,38 @@ else
     DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
 }
 
-echo json_encode(['success' => true]);
+$sql = 'SELECT COUNT(*) FROM qr_players WHERE alive = 1 AND qr_events_id = ?';
+$playersLeft = DB::prepare($sql)->execute([$info['id']])->fetchColumn();
+
+$config = (array) json_decode(file_get_contents('priv/config.json'));    
+
+if($config != false && isset($config['killfeed_webhook']) && $config['killfeed_webhook'] != '')
+{
+    if($playersLeft == 1)
+    {
+        $message = $_SESSION['qr']['name'] . " taggade " . $info['name'] . " och vann därmed QRTag! Grattis!";
+    }
+    else
+    {
+        $message = $_SESSION['qr']['name'] . " taggade " . $info['name'] . "!\nNu är det $playersLeft spelare kvar.";
+    }
+    $options = array(
+        'http' => array(
+            'header'  => "Content-type: application/x-www-form-urlencoded",
+            'method'  => 'POST',
+            'content' => http_build_query(array('content' => $message))
+        )
+    );
+    $context  = stream_context_create($options);
+    $result = file_get_contents($config['killfeed_webhook'], false, $context);
+}
+
+if($playersLeft == 1)
+{
+    echo json_encode(['success' => 'Du vann! Grattis!']);
+
+}
+else
+{
+    echo json_encode(['success' => 'Du taggade ditt mål! Du kommer nu tilldelas ett nytt. Lycka till!']);
+}
