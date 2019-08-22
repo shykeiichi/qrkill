@@ -33,4 +33,9 @@ if($event)
 	$model['users'] = $users;
 }
 
+if(isset($_GET['screen']))
+{
+	echo $twig->render('scoreboard.screen.html', $model);
+	die();
+}
 echo $twig->render('scoreboard.html', $model);
