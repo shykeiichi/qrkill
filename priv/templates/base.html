@@ -48,10 +48,12 @@
         {% endblock header %}
 
         {% block content %}{% endblock %}
-        <footer>
-            <hr class="my-4 bg-white">
-            <p>Vänligen rapportera eventuella buggar till Movitz.</p>
-        </footer>
+        {% block footer %}
+            <footer>
+                <hr class="my-4 bg-white">
+                <p>Vänligen rapportera eventuella buggar till Movitz.</p>
+            </footer>
+        {% endblock footer %}
     </div>
 </body>
 </html>

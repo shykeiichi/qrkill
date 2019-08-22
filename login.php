@@ -53,7 +53,7 @@ if($user)
 	die();
 }
 
-$search = ldap_search($ldap, "OU=Elever,DC=ad,DC=ssis,DC=nu", "(cn=" . $username . ")", array("cn", "givenName", "sn", "memberOf")) or die('ldap_search failed');
+$search = ldap_search($ldap, "DC=ad,DC=ssis,DC=nu", "(sAMAccountName=" . $username . ")", array("cn", "givenName", "sn", "memberOf")) or die('ldap_search failed');
 $userInfo = ldap_get_entries($ldap, $search);
 if($userInfo['count'] == 0)
 {
@@ -63,7 +63,7 @@ if($userInfo['count'] == 0)
 $userInfo = $userInfo[0];
 
 $name = $userInfo['givenname'][0] . ' ' . $userInfo['sn'][0];
-$class = 'Okänd klass';
+$class = 'Lärare';
 
 foreach($userInfo['memberof'] as $sg)
 {
