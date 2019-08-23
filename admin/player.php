@@ -22,7 +22,11 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
     $sql = '
     SELECT COUNT(qr_kills.id), qr_players.*, qr_users.* 
     FROM qr_players 
-    JOIN qr_users LEFT OUTER JOIN qr_kills ON qr_kills.killer = qr_users.id = qr_players.qr_users_id AND qr_kills.qr_events_id = qr_players.qr_events_id 
+    JOIN qr_users 
+    JOIN qr_kills 
+        ON qr_kills.killer = qr_users.id
+            AND qr_users.id = qr_players.qr_users_id 
+            AND qr_kills.qr_events_id = qr_players.qr_events_id 
     WHERE qr_players.qr_users_id = ? AND qr_players.qr_events_id = ?
     ';
     $model['blob'] = DB::prepare($sql)->execute([$_GET['userId'], $_GET['eventId']])->fetch();
