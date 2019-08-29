@@ -20,7 +20,9 @@
         <form action="register.php" method="post">
             <button class="btn btn-success" type="submit">Gå med!</button>
         </form>
-        <p class="pt-2">Du <b>måste</b> klicka på knappen för att kunna vara med.</p>
+        {% if date() < date(event.start_date) %}
+            <p class="pt-2">Du <b>måste</b> klicka på knappen för att kunna vara med.</p>
+        {% endif %}
     </div>
     {% if date() < date(event.start_date) %}
         <script>

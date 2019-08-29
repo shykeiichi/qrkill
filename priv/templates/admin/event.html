@@ -2,6 +2,17 @@
 {% block title %}Event{% endblock %}
 
 {% block content %}
+<style>
+.hide {
+	color: transparent;
+	text-shadow: 0 0 10px #000;
+}
+.hide:hover {
+	color: black;
+	text-shadow: 0 0 0px #000;
+
+}
+</style>
     <div class="row">
         <div class="col">
             <h3>Event</h3>
@@ -73,13 +84,13 @@
             </thead>
             <tbody>
                 {% for user in users %}
-                    <tr>
+                    <tr id="user-{{ user.id }}">
                         <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.class }}</td>
-                        <td>{{ user.secret }}</td>
+                        <td class="hide">{{ user.secret }}</td>
                         {% if user.target != 0 %}
-                            <td>{{ userMap[user.target] }} ({{ user.target }})</td>
+                            <td><a class="hide" href="#user-{{ user.target }}">{{ userMap[user.target] }}<a></td>
                         {% else %}
                             <td><p class="badge badge-danger">Odefinerat</p></td>
                         {% endif %}

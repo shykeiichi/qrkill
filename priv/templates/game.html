@@ -48,7 +48,7 @@
                 Förnamn: {{ session.qr.name|split(' ', 2)[0] }}<br>
                 Efternamn: {{ session.qr.name|split(' ', 2)[1] }}<br>
                 Klass: {{ session.qr.class }}<br>
-                Poäng: {{ kills|length }}<br>
+                Poäng: {{ victims|length }}<br>
                 Kod: <span id="secret">{{ player.secret }}</span>
                 <hr class="my-4 bg-white">
                 <div class="row">
