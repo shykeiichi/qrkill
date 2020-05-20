@@ -28,6 +28,7 @@ if($event)
 	WHERE qr_players.qr_events_id = ?
 	GROUP BY qr_kills.killer
 	ORDER BY score DESC, alive DESC
+	LIMIT 10
 	';
 	$users = DB::prepare($sql)->execute([$event['id']])->fetchAll();
 	$model['users'] = $users;

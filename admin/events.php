@@ -21,12 +21,10 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
         echo $twig->render('admin/events.html', $model);
         die();
     }
-
     
     $sql = 'SELECT * FROM qr_events WHERE id = ?';
     $model['event'] = DB::prepare($sql)->execute([$_GET['id']])->fetch();
-
-
+    
     if(empty($model['event']))
     {
         http_response_code(404);
@@ -50,8 +48,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 {
     if($_POST['action'] === 'Skapa')
     {
-        $sql = 'INSERT INTO qr_events (name, start_date, end_date, display_date) VALUES (?, ?, ?, ?)';
-        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
+        $sql = 'INSERT INTO qr_events (name, start_date, end_date, display_date, show_class) VALUES (?, ?, ?, ?, ?)';
+        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date'], isset($_POST['show_class']) ? 1 : 0]);
         header('Location: events.php?id=' . DB::lastInsertId());
         die();
     }
@@ -67,8 +65,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     if($_POST['action'] == 'Uppdatera')
     {
-        $sql = 'UPDATE qr_events SET name = ?, start_date = ?, end_date = ?, display_date = ?';
-        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
+        $sql = 'UPDATE qr_events SET name = ?, start_date = ?, end_date = ?, display_date = ?, show_class = ? WHERE id = ?';
+        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date'], isset($_POST['show_class']) ? 1 : 0, $_POST['id']]);
         header('Location: events.php?id=' . $_POST['id']);
         die();
     }

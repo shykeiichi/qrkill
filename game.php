@@ -17,7 +17,7 @@ SELECT
     name, 
     start_date, 
     end_date, 
-    DATEDIFF(end_date, NOW()) AS days_left, 
+    show_class,
     (COUNT(qr_players.target) != 0) AS targets_assigned,
     (COUNT(has_won_check.target) != 0) AS someone_has_won,
 CASE
@@ -35,7 +35,7 @@ $model['event'] = $event;
 
 if(!isset($event['id']))
 {
-    echo $twig->render('noevents.html');
+    echo $twig->render('info/noevents.html');
     die();
 }
 
@@ -51,6 +51,8 @@ if($event['status'] == 3 && $event['targets_assigned'] == 0)
         $id = isset($users[$key + 1]) ? $users[$key + 1]['qr_users_id'] : $users[0]['qr_users_id'];
         DB::prepare($sql)->execute([$id, $user['qr_users_id'], $event['id']]);
     }
+    header('Location: game.php');
+    die();
 }
 
 $sql = '
@@ -70,9 +72,9 @@ $model['player'] = $player;
 
 if(!$player)
 {
-    if($event['days_left'] < 4 && $event['status'] == 3 || $event['someone_has_won'] == 1)
+    if($event['status'] == 3)
     {
-        echo $twig->render('noevents.html', $model);
+        echo $twig->render('info/ongoing.html', $model);
     }
     else
     {
@@ -83,30 +85,33 @@ if(!$player)
 
 if($event['status'] == 1) 
 {
-    echo $twig->render('countdown.html', $model);
+    echo $twig->render('info/countdown.html', $model);
     die();    
 }
 
 if($event['status'] == 2)
 {
-    echo $twig->render('eventover.html', $model);
+    echo $twig->render('info/eventover.html', $model);
     die();
 }
 
 if($player['alive'] == 0)
 {
-    echo $twig->render('dead.html', $model);
+    echo $twig->render('info/dead.html', $model);
     die();
 }
 
 if($_SESSION['qr']['id'] == $player['target'])
 {
-    echo $twig->render('win.html', $model);
+    echo $twig->render('info/win.html', $model);
     die();
 }
 
 $sql = '
-SELECT victim.name, victim.class, kills.created_date
+SELECT 
+    victim.name, 
+    victim.class, 
+    kills.created_date
 FROM qr_kills AS kills
 RIGHT JOIN qr_users AS victim ON kills.target = victim.id
 WHERE kills.killer = ? AND kills.qr_events_id = ?

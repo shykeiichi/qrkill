@@ -1,9 +1,8 @@
-{% extends "info_base.html" %}
+{% extends "info/info_base.html" %}
 
 {% block jumbo %}
     <h1>QRTag är över!</h1>
     <p>Tack för att du deltog i QRTag! Vi hoppas att du tyckte att det var kul.</p>
     <p>Om du vill se hur det gick så kan du kolla på <a href="scoreboard.php">poängtavlan</a>.</p>
-    <hr class="bg-white">
-    {% include "feedback.html" %}
+    {% include "info/feedback.html" %}
 {% endblock jumbo %}

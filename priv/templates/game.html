@@ -16,7 +16,12 @@
                     <h3 class="display-4">Ditt mål</h3>
                     Förnamn: {{ player.target_name|split(' ', 2)[0] }}<br>
                     Efternamn: {{ player.target_name|split(' ', 2)[1] }}<br>
-                    Klass: {{ player.target_class }}<br>
+                    Klass: 
+                        {% if not event.show_class %}
+                            <span class="blurred">Te00XX</span><br>
+                        {% else %}
+                            <span>{{ player.target_class }}</span><br>
+                        {% endif %}
                     <hr class="my-4 bg-white">
                     <div id="auto" hidden>
                         <video class="embed-responsive" id="preview"></video>
@@ -76,7 +81,20 @@
             </div>
         </div>
     </div> 
-
+<style>
+.blurred
+{
+	color: transparent;
+	text-shadow: 0 0 10px #FFF;
+ -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+</style>
     <div class="modal text-dark" id="qrtag-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
