@@ -1,9 +1,9 @@
 <?php
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', '18mosu');
-define('DB_USER', '18mosu');
-define('DB_PASS', 'bad_password');
+define('DB_NAME', '20loka');
+define('DB_USER', '20loka');
+define('DB_PASS', '');
 define('DB_CHAR', 'utf8');
 
 class DB
