@@ -11,7 +11,7 @@ SELECT *
 FROM qr_events
 WHERE display_date > CURRENT_DATE LIMIT 1
 ';
-$event =  DB::prepare($sql)->execute()->fetch();
+$event =  DB::prepare($sql)->texecute()->fetch();
 $model['event'] = $event;
 
 if($event)
@@ -30,7 +30,7 @@ if($event)
 	ORDER BY score DESC, alive DESC
 	LIMIT 10
 	';
-	$users = DB::prepare($sql)->execute([$event['id']])->fetchAll();
+	$users = DB::prepare($sql)->texecute([$event['id']])->fetchAll();
 	$model['users'] = $users;
 }
 

@@ -18,7 +18,7 @@ FROM qr_players
 WHERE qr_events_id = (SELECT id FROM qr_events WHERE end_date > NOW() ORDER BY start_date DESC LIMIT 1) 
 AND qr_users_id = ?
 ";
-$id = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetch();
+$id = DB::prepare($sql)->texecute([$_SESSION['qr']['id']])->fetch();
 if($id)
 {
     die();
@@ -31,4 +31,4 @@ INSERT INTO qr_players
 ((SELECT id FROM qr_events WHERE end_date > NOW() ORDER BY start_date DESC LIMIT 1), ?, ?) 
 ON DUPLICATE KEY UPDATE secret = CONCAT(secret, \'X\')
 ';
-DB::prepare($sql)->execute([$_SESSION['qr']['id'], $secret]);
+DB::prepare($sql)->texecute([$_SESSION['qr']['id'], $secret]);

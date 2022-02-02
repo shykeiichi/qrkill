@@ -28,7 +28,7 @@ FROM qr_events AS event
 RIGHT JOIN qr_players AS player ON event.id = player.qr_events_id 
 WHERE player.qr_users_id = ? AND NOW() < display_date AND NOW() > start_date
 ";
-$event = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetch();
+$event = DB::prepare($sql)->texecute([$_SESSION['qr']['id']])->fetch();
 
 if($event['feedback_given'] == 1)
 {
@@ -36,7 +36,7 @@ if($event['feedback_given'] == 1)
 }
 
 $sql = 'INSERT INTO qr_feedback (rate, feedback, qr_events_id) VALUES (?, ?, ?)';
-DB::prepare($sql)->execute([$_POST['rate'], $_POST['feedback'], $event['id']]);
+DB::prepare($sql)->texecute([$_POST['rate'], $_POST['feedback'], $event['id']]);
 
 $sql = 'UPDATE qr_players SET feedback_given = 1 WHERE qr_users_id = ? AND qr_events_id = ?';
-DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']]);
+DB::prepare($sql)->texecute([$_SESSION['qr']['id'], $event['id']]);

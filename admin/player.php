@@ -29,7 +29,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
             AND qr_kills.qr_events_id = qr_players.qr_events_id 
     WHERE qr_players.qr_users_id = ? AND qr_players.qr_events_id = ?
     ';
-    $model['blob'] = DB::prepare($sql)->execute([$_GET['userId'], $_GET['eventId']])->fetch();
+    $model['blob'] = DB::prepare($sql)->texecute([$_GET['userId'], $_GET['eventId']])->fetch();
 
     echo $twig->render('admin/blob.html', $model);
     die();
@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     if($_POST['action'] === 'Skapa')
     {
         $sql = 'INSERT INTO qr_events (name, start_date, end_date, display_date) VALUES (?, ?, ?, ?)';
-        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
+        DB::prepare($sql)->texecute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
         header('Location: event.php?id=' . DB::lastInsertId());
         die();
     }
@@ -48,10 +48,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     if($_POST['action'] == 'Radera')
     {
         $sql = 'DELETE FROM qr_players WHERE qr_events_id = ?';
-        DB::prepare($sql)->execute([$_POST['id']]);
+        DB::prepare($sql)->texecute([$_POST['id']]);
 
         $sql = 'DELETE FROM qr_events WHERE id = ?';
-        DB::prepare($sql)->execute([$_POST['id']]);
+        DB::prepare($sql)->texecute([$_POST['id']]);
         
         header('Location: index.php');
         die();
@@ -60,7 +60,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     if($_POST['action'] == 'Uppdatera')
     {
         $sql = 'UPDATE qr_events SET name = ?, start_date = ?, end_date = ?, display_date = ?';
-        DB::prepare($sql)->execute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
+        DB::prepare($sql)->texecute([$_POST['name'], $_POST['start_date'], $_POST['end_date'], $_POST['display_date']]);
         header('Location: event.php?id=' . $_POST['id']);
         die();
     }
@@ -72,26 +72,26 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             $classes = explode(',', $_POST['whitelist']);
             $in = str_repeat('?,', count($classes) - 1) . '?';
             $sql = "SELECT id FROM qr_users WHERE class IN ($in)";
-            $users = DB::prepare($sql)->execute($classes)->fetchAll();
+            $users = DB::prepare($sql)->texecute($classes)->fetchAll();
         }
         else if($_POST['whitelistStudents'] !== '')
         {
             $usernames = explode(',', $_POST['whitelistStudents']);
             $in = str_repeat('?,', count($classes) - 1) . '?';
             $sql = "SELECT id FROM qr_users WHERE username IN ($in)";
-            $users = DB::prepare($sql)->execute($usernames)->fetchAll();
+            $users = DB::prepare($sql)->texecute($usernames)->fetchAll();
         }
         else
         {
             $sql = "SELECT id FROM qr_users";
-            $users = DB::prepare($sql)->execute()->fetchAll();
+            $users = DB::prepare($sql)->texecute()->fetchAll();
         }
 
         foreach($users as $key => $user)
         {
             $secret = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVW'), 0, 5);
             $sql = 'INSERT INTO qr_players (qr_events_id, qr_users_id, secret) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE secret = CONCAT(secret, \'X\')';
-            DB::prepare($sql)->execute([$_POST['id'], $user['id'], $secret]);
+            DB::prepare($sql)->texecute([$_POST['id'], $user['id'], $secret]);
         }
         
         header('Location: event.php?id=' . $_POST['id']);
@@ -101,7 +101,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     if($_POST['action'] === 'Ta bort')
     {
         $sql = 'DELETE FROM qr_players WHERE qr_events_id = ? AND qr_users_id = ?';
-        DB::prepare($sql)->execute([$_POST['eventId'], $_POST['userId']]);
+        DB::prepare($sql)->texecute([$_POST['eventId'], $_POST['userId']]);
         header('Location: event.php?id=' . $_POST['eventId']);
         die();
     }
@@ -109,14 +109,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     if($_POST['action'] === 'Tilldela mål')
     {
         $sql = 'SELECT * FROM qr_players WHERE qr_events_id = ?';
-        $users = DB::prepare($sql)->execute([$_POST['id']])->fetchAll();
+        $users = DB::prepare($sql)->texecute([$_POST['id']])->fetchAll();
         shuffle($users);
         
         $sql = 'UPDATE qr_players SET target = ? WHERE qr_users_id = ? AND qr_events_id = ?';
         foreach($users as $key => $user)
         {
             $id = isset($users[$key + 1]) ? $users[$key + 1]['qr_users_id'] : $users[0]['qr_users_id'];
-            DB::prepare($sql)->execute([$id, $user['qr_users_id'], $_POST['id']]);
+            DB::prepare($sql)->texecute([$id, $user['qr_users_id'], $_POST['id']]);
         }
         header('Location: event.php?id=' . $_POST['id']);
         die();

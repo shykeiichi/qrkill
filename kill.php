@@ -22,7 +22,7 @@ if(!isset($postData['secret']))
 $secret = $postData['secret'];
 
 $sql = 'SELECT alive FROM qr_players WHERE qr_users_id = ?';
-$alive = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetchColumn();
+$alive = DB::prepare($sql)->texecute([$_SESSION['qr']['id']])->fetchColumn();
 
 if($alive != 1)
 {
@@ -51,7 +51,7 @@ JOIN qr_users AS user
         AND target.qr_users_id = user.id
 WHERE target.secret = ?
 ';
-$info =  DB::prepare($sql)->execute([$_SESSION['qr']['id'], $secret])->fetch();
+$info =  DB::prepare($sql)->texecute([$_SESSION['qr']['id'], $secret])->fetch();
 
 if(!$info || $info['correct_secret'] == 0)
 {
@@ -66,13 +66,13 @@ if($info['alive'] == 0)
 }
 
 $sql = 'UPDATE qr_players SET alive = 0 WHERE secret = ?';
-DB::prepare($sql)->execute([$secret]);
+DB::prepare($sql)->texecute([$secret]);
 
 $sql = '
 INSERT INTO qr_kills (target, killer, qr_events_id) 
 VALUES ((SELECT qr_users_id FROM qr_players WHERE secret = ?), ?, ?)
 ';
-DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
+DB::prepare($sql)->texecute([$secret, $_SESSION['qr']['id'], $info['id']]);
 
 $sql = "
 SELECT qr_users_id
@@ -80,7 +80,7 @@ FROM qr_players
 WHERE target IS NULL AND qr_events_id = ?
 ORDER BY created_date ASC LIMIT 1
 ";
-$playerWithoutTarget = DB::prepare($sql)->execute([$info['id']])->fetchColumn();
+$playerWithoutTarget = DB::prepare($sql)->texecute([$info['id']])->fetchColumn();
 
 if($playerWithoutTarget)
 {
@@ -91,7 +91,7 @@ if($playerWithoutTarget)
     SET new_player.target = victim.target, killer.target = new_player.qr_users_id
     WHERE killer.qr_users_id = ? AND killer.qr_events_id = ?
     ';
-    DB::prepare($sql)->execute([$secret, $playerWithoutTarget, $_SESSION['qr']['id'], $info['id']]);
+    DB::prepare($sql)->texecute([$secret, $playerWithoutTarget, $_SESSION['qr']['id'], $info['id']]);
 }
 else
 {
@@ -101,11 +101,11 @@ else
     SET killer.target = victim.target 
     WHERE qr_users_id = ? AND qr_events_id = ?
     ';
-    DB::prepare($sql)->execute([$secret, $_SESSION['qr']['id'], $info['id']]);
+    DB::prepare($sql)->texecute([$secret, $_SESSION['qr']['id'], $info['id']]);
 }
 
 $sql = 'SELECT COUNT(*) FROM qr_players WHERE alive = 1 AND qr_events_id = ?';
-$playersLeft = DB::prepare($sql)->execute([$info['id']])->fetchColumn();
+$playersLeft = DB::prepare($sql)->texecute([$info['id']])->fetchColumn();
 
 $config = (array) json_decode(file_get_contents('priv/config.json'));    
 

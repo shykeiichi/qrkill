@@ -30,7 +30,7 @@ LEFT JOIN qr_players ON event.id = qr_players.qr_events_id AND qr_players.target
 LEFT OUTER JOIN qr_players AS has_won_check ON qr_players.target = qr_players.qr_users_id
 WHERE display_date > NOW() ORDER BY start_date DESC LIMIT 1
 ";
-$event = DB::prepare($sql)->execute()->fetch();
+$event = DB::prepare($sql)->texecute()->fetch();
 $model['event'] = $event;
 
 if(!isset($event['id']))
@@ -42,14 +42,14 @@ if(!isset($event['id']))
 if($event['status'] == 3 && $event['targets_assigned'] == 0)
 {
     $sql = 'SELECT * FROM qr_players WHERE qr_events_id = ?';
-    $users = DB::prepare($sql)->execute([$event['id']])->fetchAll();
+    $users = DB::prepare($sql)->texecute([$event['id']])->fetchAll();
     shuffle($users);
     
     $sql = 'UPDATE qr_players SET target = ? WHERE qr_users_id = ? AND qr_events_id = ?';
     foreach($users as $key => $user)
     {
         $id = isset($users[$key + 1]) ? $users[$key + 1]['qr_users_id'] : $users[0]['qr_users_id'];
-        DB::prepare($sql)->execute([$id, $user['qr_users_id'], $event['id']]);
+        DB::prepare($sql)->texecute([$id, $user['qr_users_id'], $event['id']]);
     }
     header('Location: game.php');
     die();
@@ -67,7 +67,7 @@ FROM qr_players AS player
 LEFT OUTER JOIN qr_users AS target_user ON player.target = target_user.id
 WHERE player.qr_users_id = ? AND player.qr_events_id = ?
 ';
-$player = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetch();
+$player = DB::prepare($sql)->texecute([$_SESSION['qr']['id'], $event['id']])->fetch();
 $model['player'] = $player;
 
 if(!$player)
@@ -116,6 +116,6 @@ FROM qr_kills AS kills
 RIGHT JOIN qr_users AS victim ON kills.target = victim.id
 WHERE kills.killer = ? AND kills.qr_events_id = ?
 ';
-$model['victims'] = DB::prepare($sql)->execute([$_SESSION['qr']['id'], $event['id']])->fetchAll();
+$model['victims'] = DB::prepare($sql)->texecute([$_SESSION['qr']['id'], $event['id']])->fetchAll();
 
 echo $twig->render('game.html', $model);

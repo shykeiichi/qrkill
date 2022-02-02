@@ -12,6 +12,6 @@ if(!isset($_SESSION['qr']['id']))
 }
 
 $sql = 'SELECT alive FROM qr_players WHERE qr_users_id = ?';
-$alive = DB::prepare($sql)->execute([$_SESSION['qr']['id']])->fetchColumn();
+$alive = DB::prepare($sql)->texecute([$_SESSION['qr']['id']])->fetchColumn();
 
 echo json_encode(['alive' => $alive]);

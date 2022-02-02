@@ -1,9 +1,9 @@
 <?php
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', '20loka');
-define('DB_USER', '20loka');
-define('DB_PASS', '');
+define('DB_NAME', 'your student tag');
+define('DB_USER', 'your student tag');
+define('DB_PASS', 'your password');
 define('DB_CHAR', 'utf8');
 
 class DB
@@ -35,7 +35,7 @@ class DB
 
 class myPDOStatement extends PDOStatement
 {
-	function execute($data = array())
+	function texecute($data = array())
 	{
 		parent::execute($data);
 		return $this;

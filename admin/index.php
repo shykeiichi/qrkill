@@ -7,7 +7,7 @@ require_once '../priv/pdo.php';
 
 if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
 {
-    header('Location: /index.php');
+    header('Location: /qrkill/index.php');
     die();
 }
 
@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     $conf['ga_track_id'] = $_POST['ga_track_id'];
     $conf['killfeed_webhook'] = $_POST['killfeed_webhook'];
     $conf['debug_webhook'] = $_POST['debug_webhook'];
-    file_put_contents(__DIR__ . "/../priv/config.json", json_encode($conf));
+    file_put_contents(__DIR__ . "../priv/config.json", json_encode($conf));
     header('Location: index.php');
     die();
 }
