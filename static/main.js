@@ -25,9 +25,7 @@ function setCamera(isCamera) {
     $('#auto').attr('hidden', !isCamera)
 }
 function submitCode(secret) {
-    console.log(secret)
     secret = secret || $('#code').val()
-    console.log(JSON.stringify(secret))
     fetch('kill.php', {
         method: 'POST',
         body: JSON.stringify({"secret":secret}),
@@ -39,7 +37,6 @@ function submitCode(secret) {
 }
 
 function handleKill(resp) { // det hette qrkill förut, heheheh
-    console.log(resp)
     if(resp.error) {
         $('#modal-title').text('Fel...')
         $('#modal-message').text(resp.error)

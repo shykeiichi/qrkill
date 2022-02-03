@@ -18,34 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET')
 	header('Location: index.php');
 	die();
 }
-
-#$url = 'https://api.ssis.nu/login/';
-#$user=explode('@', $_POST['username'])[0];
-#$pass=$_POST['password'];
-#$params=sprintf('{"user":"%s","pass":"%s"}',$user,$pass);
-#$data = array('user' => $user,'pass'=>$pass);
-#$query=http_build_query($data);
-// use key 'http' even if you send the request to https://...
-#$options = array(
-#    'http' => array(
-#        'method'  => 'POST',
-#		'header' =>"Connection: close\r\n".
-#                        "Content-Length: ".strlen($query)."\r\n",
-#        'content' => $query
-#    )
-#);
-#$context  = stream_context_create($options);
-#$result = file_get_contents($url, false, $context);
-#if ($result === FALSE) { /* Handle error */ }
-#$dat=json_decode($result);
-#$bind=($dat->{'result'})=='OK';
-#echo $result;
-#echo $_POST['username'];
 $username = explode('@', $_POST['username'])[0];
-echo "hi";
 $ldap = ldap_connect("ldaps://ad.ssis.nu") or die('Något gick fel. Vänligen kontakta Movitz.');
 $bind = ldap_bind($ldap, $username . "@ad.ssis.nu", $_POST['password']);
-echo "hi";
 $sql = 'SELECT id, name, is_admin, class FROM qr_users WHERE username = ?';
 $user = DB::prepare($sql)->texecute([$username])->fetch();
 
@@ -57,7 +32,6 @@ if(!$bind)
 		$sql = "INSERT INTO qr_logins (success, qr_users_id) VALUES (0, ?)";
 		DB::prepare($sql)->texecute([$user['id']]);
 	}
-	echo "hi";
 	die();
 }
 
