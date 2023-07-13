@@ -4,7 +4,8 @@ if(!isset($_SESSION['qr']['is_admin']) || $_SESSION['qr']['is_admin'] === '0')
     header('Location: /qrkill/index.php');
     die();
 }
-if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['username']))
+
+if(isset($_GET['username']))
 { 
     $sql = '
     SELECT 
@@ -16,4 +17,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['username']))
     $model['blob'] = DB::prepare($sql)->texecute([$_GET['username']])->fetch(); 
     echo $twig->render('admin/blob.html', $model);
     die();
+} else 
+{
+    echo $twig->render('admin/get-target.html');
 }

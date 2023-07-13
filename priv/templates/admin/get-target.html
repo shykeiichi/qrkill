@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+{% block title %}Get Target{% endblock %}
+
+{% block content %}
+    <h1>Get Target</h1>
+    
+    <form action="https://qrtag.ssis.nu/admin/get-target.php" method="get">
+        <input type="text" name="username" placeholder="Enter your username (22test)" required>
+        <input type="submit" value="Submit" class="btn">
+    </form>
+{% endblock %}
